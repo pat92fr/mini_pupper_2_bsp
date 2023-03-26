@@ -1,0 +1,11 @@
+Tests :
+-------
+
+
+T01. ESP32 LL API performances
+
+ 	 200Hz min     (dt = 5ms)
+	 500Hz nominal (dt = 2ms)
+	1000Hz target  (dt = 1ms)
+
+ 
