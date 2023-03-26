@@ -146,6 +146,8 @@
         </inertial>      
     </link>
 
+    <link name="FR-foot"/>
+
     <!--
     ********************************************
     ******             JOINTS             ******
@@ -175,6 +177,12 @@
         <limit lower="-2.8" upper="0.0" effort="100" velocity="1000"/>
     </joint>
     
+    <joint name="FR-FOOT" type="fixed">
+        <parent link="FR-tibia"/>
+        <child link="FR-foot"/>
+        <origin rpy="0 0 0" xyz="0.060 0 0"/>
+        <axis xyz="0 0 1"/>
+    </joint>
 
     <!-- 
     ############################################
@@ -245,6 +253,8 @@
           <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
         </inertial>      
     </link>
+
+    <link name="FL-foot"/>
     
     <!--
     ********************************************
@@ -275,6 +285,12 @@
         <limit lower="-2.8" upper="0.0" effort="100" velocity="1000"/>
     </joint>
     
+    <joint name="FL-FOOT" type="fixed">
+        <parent link="FL-tibia"/>
+        <child link="FL-foot"/>
+        <origin rpy="0 0 0" xyz="0.060 0 0"/>
+        <axis xyz="0 0 1"/>
+    </joint>
 
     <!-- 
     ############################################
@@ -347,6 +363,8 @@
         </inertial>      
     </link>
 
+    <link name="RR-foot"/>
+
     <!--
     ********************************************
     ******             JOINTS             ******
@@ -376,6 +394,13 @@
         <limit lower="-2.8" upper="0.0" effort="100" velocity="1000"/>
     </joint>
     
+    <joint name="RR-FOOT" type="fixed">
+        <parent link="RR-tibia"/>
+        <child link="RR-foot"/>
+        <origin rpy="0 0 0" xyz="0.060 0 0"/>
+        <axis xyz="0 0 1"/>
+    </joint>
+
     <!-- 
     ############################################
     ######              Leg Rear Left    ######
@@ -445,6 +470,8 @@
           <inertia ixx="0.0001" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.0001"/>
         </inertial>      
     </link>
+
+    <link name="RL-foot"/>
     
     <!--
     ********************************************
@@ -475,5 +502,11 @@
         <limit lower="-2.8" upper="0.0" effort="100" velocity="1000"/>
     </joint>
     
+    <joint name="RL-FOOT" type="fixed">
+        <parent link="RL-tibia"/>
+        <child link="RL-foot"/>
+        <origin rpy="0 0 0" xyz="0.060 0 0"/>
+        <axis xyz="0 0 1"/>
+    </joint>
 
 </robot>    
