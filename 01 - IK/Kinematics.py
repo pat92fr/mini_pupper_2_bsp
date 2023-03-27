@@ -215,6 +215,7 @@ def leg_inverse_kinematics_LRF(target_foot_position_LRF,initial_joint_position,l
     """
     joint_position = initial_joint_position
 
+    #for counter in range(20):
     for counter in range(20):
 
         J = jacobian(joint_position,leg_index,config)
