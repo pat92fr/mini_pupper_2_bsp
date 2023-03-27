@@ -336,6 +336,157 @@ def four_legs_inverse_kinematics_BRF(target_feet_position_BRF,initial_joint_posi
         )
     return joint_position
 
+def cos_law_c(a,b,angle):
+    return math.sqrt(a**2+b**2-2*a*b*math.cos(angle))
+
+def cos_law_A(a,b,c):
+    x = (a**2+b**2-c**2) / (2*a*b)
+    x = np.clip(x,-1.0,1.0)
+    return math.acos( x )
+
+# return joint position (coxa,hips,knee) in RADIANS from foot position (x,y,z) in METERS 
+def leg_explicit_inverse_kinematics_LRF(foot_position_LRF,leg_index,config):
+    log("foot_position:\n"+str(np.round(foot_position_LRF,3)))
+    (x,y,z) = foot_position_LRF
+    
+    # hips to foot distance in XY plane
+    CF_dist = (x ** 2 + y ** 2 ) ** 0.5
+    log("CF dist: "+str(round(CF_dist,3)))
+    
+    CF_angle = math.atan2(-y,-x);
+    log("CF angle: "+str(round(math.degrees(CF_angle),1))+"deg")
+
+    # bound CF
+    if False:
+        CF_dist_min = math.sqrt(config.LEG_MIN_LENGTH**2+config.ABDUCTION_OFFSET**2)
+        CF_dist_max =  math.sqrt(config.LEG_MAX_LENGTH**2+config.ABDUCTION_OFFSET**2)
+        CF_dist = min(CF_dist_max,max(CF_dist,CF_dist_min))
+        log("CF dist: "+str(round(CF_dist,3))+" bounded")
+
+    # tibia+femur distance
+    HF_dist_sq = CF_dist ** 2 - config.ABDUCTION_OFFSET ** 2
+    HF_dist_sq = max(HF_dist_sq,0)
+    HF_dist = HF_dist_sq ** 0.5
+    log("HF: "+str(round(HF_dist,3)))
+
+    # foot - coxa - hips angle
+    FCH = cos_law_A(CF_dist,config.ABDUCTION_OFFSET,HF_dist)
+    log("FCH: "+str(round(math.degrees(FCH),1))+"deg")
+
+    # coxa angle
+    HIPS_A = 0
+    if leg_index == 1 or leg_index == 3:
+        HIPS_A = CF_angle - FCH + math.pi/2.0
+    if leg_index == 0 or leg_index == 2:
+        HIPS_A = CF_angle + FCH - math.pi/2.0
+    log("HIPS_A: "+str(round(math.degrees(HIPS_A),1))+"deg")
+
+    # compute angle and elongation of the leg, in the (tibia/femur plane)
+    L = (z ** 2 + HF_dist_sq) ** 0.5
+    Alpha = math.atan2(HF_dist,-z);
+    log("L: "+str(round(L,3)))
+    log("Alpha: "+str(round(math.degrees(Alpha),0)))
+    # bound max elongation
+    if False:
+        if(L>config.LEG_MAX_LENGTH):
+            L = config.LEG_MAX_LENGTH
+        if(L<config.LEG_MIN_LENGTH):
+            L = config.LEG_MIN_LENGTH
+        log("Lbounded: "+str(round(L,3)))   
+      
+    # compute angle from HIP to femur in coxa plane
+    HIPS = Alpha + cos_law_A(L,config.LEG_LF,config.LEG_LT)
+    log("HIPS: "+str(round(math.degrees(HIPS),0))+"deg")
+
+    # compute angle from femur to tibia in coxa plance
+    #KNEE = cos_law_A(config.LEG_LF,config.LEG_LT,L) for felin
+    KNEE = cos_law_A(config.LEG_LF,config.LEG_LT,L) - math.pi + HIPS # for pupper
+    log("KNEE: "+str(round(math.degrees(KNEE),0))+"deg")
+    joint_position = np.array([HIPS_A,HIPS,KNEE])
+    joint_position[1:2] = np.fmod(joint_position[1:2] + 2*np.pi, 2 * np.pi)  
+    return joint_position 
+
+
+def four_legs_explicit_inverse_kinematics_LRF(target_foot_position_LRF,config):
+    """Find the joint position of the four feet from their position in their respective Leg Reference Frame
+
+    LFR : centered HIPS axis, X upward, Y leftward, Z backward for all leg
+
+    Parameters
+    ----------
+    target_foot_position_LRF : numpy array (3x4) 
+        Array of the foot position of four legs in LRF
+        [0,i] X
+        [1,i] Y
+        [2,i] Z
+    where i is the leg_index :
+        0: Front Right
+        1: Front Left
+        2: Read Right
+        3: Rear Left
+    config : [type]
+        [description]
+
+    Returns
+    -------
+    numpy array (3x4)
+        Array of the joint angles.
+        [0] hips abduction revolute joint in RADIANS
+        [1] hips flexion/extension revolute joint in RADIANS
+        [2] knee flexion/extension revolute joint in RADIANS        
+    """
+    joint_position = np.zeros((3,4))
+    # for each leg
+    for i in range(4):
+        joint_position[:,i] = leg_explicit_inverse_kinematics_LRF(
+            target_foot_position_LRF[:,i],
+            i,
+            config
+        )
+    return joint_position
+
+
+
+def four_legs_explicit_inverse_kinematics_BRF(target_feet_position_BRF,config):
+    """Find the joint position of the four feet from their position in the Body Reference Frame
+
+    LFR : centered HIPS axis, X upward, Y leftward, Z backward for all leg
+
+    Parameters
+    ----------
+    target_feet_position_BRF : numpy array (3x4) 
+        Array of the foot position of four legs in LRF
+        [0,i] X
+        [1,i] Y
+        [2,i] Z
+    where i is the leg_index :
+        0: Front Right
+        1: Front Left
+        2: Read Right
+        3: Rear Left
+    config : [type]
+        [description]
+
+    Returns
+    -------
+    numpy array (3x4)
+        Array of the joint angles.
+        [0] hips abduction revolute joint in RADIANS
+        [1] hips flexion/extension revolute joint in RADIANS
+        [2] knee flexion/extension revolute joint in RADIANS        
+    """
+    joint_position = np.zeros((3,4))
+    # for each leg
+    for i in range(4):
+        target_foot_position_LRF = R_BRF_to_LRF.dot(target_feet_position_BRF[:,i]-config.LEG_ORIGINS[:,i])
+
+        joint_position[:,i] = leg_explicit_inverse_kinematics_LRF(
+            target_foot_position_LRF,
+            i,
+            config
+        )
+    return joint_position
+
 
 
 
