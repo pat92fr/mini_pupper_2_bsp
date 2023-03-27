@@ -13,8 +13,8 @@ static char const * version = PROJECT_VER;
 #include <fcntl.h>
 #include <termios.h>
 
-static bool const print_debug     {true};
-static bool const print_debug_max {true};
+static bool const print_debug     {false};
+static bool const print_debug_max {false};
 
 // host instruction code
 #define INST_CONTROL 0x01   // Host sends servo position setpoints, ESP32 replies with servo feedback, attitude, ....

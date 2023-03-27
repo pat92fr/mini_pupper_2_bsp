@@ -1,5 +1,8 @@
 #include <iostream>
 
+#include <chrono>
+using namespace std::chrono;
+
 #include "esp32-api.h"
 using namespace mini_pupper;
 
@@ -23,11 +26,27 @@ int main(int argc, char *argv[])
         torque_enable = 0;
     }
 
-    for(int i=0;i<10;++i)
+    milliseconds t0_ms = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
+
+    int result {0};
+    int errors {0};
+    for(int i=0;i<1000;++i)
     {
-        int result = proxy.update(control,feedback);
-        std::cout << "update:" << result << std::endl;
+        result = proxy.update(control,feedback);
+        if(result!=API_OK)
+        {
+            ++errors;
+            std::cout << "update:" << result << std::endl;
+        }
     }
+
+    milliseconds t1_ms = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
+
+    duration<float> difference = t1_ms - t0_ms;
+    int const milliseconds = difference.count() * 1000;
+
+    std::cout << "1000x control-feedback delay:" << milliseconds << "ms (erros count:" << errors << ")" << std::endl;
+    std::cout << "control-feedback frequency:" << (1000000.0/milliseconds) << " Hz" << std::endl;
 
     return 0;
 }
