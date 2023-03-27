@@ -29,9 +29,16 @@ E01. Manual fine-tune calibration data (CLI R/W access to calibration data)
 
 
 
+Info :
+------
 
+https://github.com/cbecker/openahrs
 
+	openAHRS Open Source IMU / AHRS
 
+towr is a light-weight and extensible C++ library for trajectory optimization for legged robots.
+
+	https://github.com/ethz-adrl/towr
 
 °°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
 
