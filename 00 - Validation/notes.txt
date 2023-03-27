@@ -13,8 +13,6 @@ T01. ESP32 LL API performances
 Tasks :
 -------
 
-W01. IK documentation (jupyter lab)
-W02. IK Python impl.  (jupyter lab)
 W03. IK CPP impl.
 W04. REST pose impl.
 W05. STAND-BY pose impl.
@@ -29,3 +27,16 @@ ESP32 FW :
 E01. Manual fine-tune calibration data (CLI R/W access to calibration data)
 
 
+
+
+
+
+
+
+°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°°
+
+Done !
+------
+
+W01. IK documentation (jupyter lab)
+W02. IK Python impl.  (jupyter lab)
