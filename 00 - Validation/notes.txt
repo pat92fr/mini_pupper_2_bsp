@@ -2,23 +2,17 @@ Tests :
 -------
 
 
-T01. ESP32 LL API performances
-
- 	 200Hz min     (dt = 5ms)
-	 500Hz nominal (dt = 2ms)
-	1000Hz target  (dt = 1ms)
-
- 
 
 Tasks :
 -------
 
+W02b. IK Python impl. (explicit method) (jupyter lab)
 W03. IK CPP impl.
 W04. REST pose impl.
 W05. STAND-BY pose impl.
 W06. CIRCLE trajectory impl. and maximum BW measure
 W07. TROT trajectory impl. and maximum BW measure
-
+W08? IMU fusion filter
 
 
 ESP32 FW :
@@ -47,3 +41,11 @@ Done !
 
 W01. IK documentation (jupyter lab)
 W02. IK Python impl.  (jupyter lab)
+T01. ESP32 LL API performances
+
+ 	 200Hz min     (dt = 5ms)
+	 500Hz nominal (dt = 2ms)
+	1000Hz target  (dt = 1ms) 
+	measured ***** 1500Hz
+
+ 
