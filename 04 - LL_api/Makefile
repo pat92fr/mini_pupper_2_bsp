@@ -1,4 +1,4 @@
-appname := esp32-api
+appname := ll-api
 
 VERSION := $(shell ../get-version.sh)
 
