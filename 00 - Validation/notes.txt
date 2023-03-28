@@ -15,6 +15,9 @@ Tests :
 # T04. (FK/IK/J) x 4 legs cycle performance on RPi4 using CPP
 # T05. ROS2 comm performance on RPi4 (Topic Hz)
 
+#T06. Compare foot trajectory at 200Hz and 500Hz, based on IK PY/CPP
+
+
 Tasks :
 -------
 
