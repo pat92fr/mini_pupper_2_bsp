@@ -2,7 +2,7 @@
 #ifndef KINEMATIC_H
 #define KINEMATIC_H
 
-#include <eigen>
+#include "Eigen"
 #include <cmath>
 #include <algorithm>
 
