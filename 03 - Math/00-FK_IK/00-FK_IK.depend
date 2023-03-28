@@ -1,6 +1,7 @@
 # depslib dependency file v1.0
-1680039291 source:c:\guithub\minipupper\mini_pupper_2_bsp\03 - math\00-fk_ik\main.cpp
+1680040818 source:c:\guithub\minipupper\mini_pupper_2_bsp\03 - math\00-fk_ik\main.cpp
 	<iostream>
+	<chrono>
 	"kinematic.h"
 
 1680040599 c:\guithub\minipupper\mini_pupper_2_bsp\03 - math\00-fk_ik\kinematic.h
