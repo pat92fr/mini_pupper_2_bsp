@@ -10,7 +10,7 @@ HL API : velocities & attitude & state, gait to foot position, odom
 Tests :
 -------
 
-# T02. (FK/IK/J) x 4 legs cycle performance on RPi4 using Py
+
 # T03. UDP comm performance on RPi4 (ping/pong two processes)
 # T04. (FK/IK/J) x 4 legs cycle performance on RPi4 using CPP
 # T05. ROS2 comm performance on RPi4 (Topic Hz)
@@ -66,4 +66,14 @@ T01. ESP32 LL API performances
 		1000x control-feedback delay:640ms (erros count:0)
 		control-feedback frequency:1562.5 Hz
 
- 
+# T02. (FK/IK/J) x 4 legs cycle performance on RPi4 using Py
+
+ 	 200Hz min     (dt = 5ms)
+	 500Hz nominal (dt = 2ms)
+	1000Hz target  (dt = 1ms) 
+	Result IK only :
+		1000x four-leg FK+IK delay:3679ms
+		four-leg FK+IK frequency:271.8129926610492Hz
+	Result FK+IK only :
+		1000x four-leg FK+IK delay:5092ms
+		four-leg FK+IK frequency:196.38648860958367Hz
