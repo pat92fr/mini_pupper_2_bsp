@@ -1,13 +1,13 @@
 import math
 import numpy as np
-from transforms3d.euler import euler2mat
+#from transforms3d.euler import euler2mat
 
 
 ##DEBUG #######################################################################
 
 # TRACE macro
 DEBUG = True
-DEBUG = False
+#DEBUG = False
 
 def log(s):
     if DEBUG:

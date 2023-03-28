@@ -222,7 +222,7 @@ if False:
 	print("Expected joint positions:\n\n"+str(np.round(np.degrees(expected_joint_position),1))+"\n")
 
 
-if True:
+if False:
 	# here is the expected result.
 	expected_joint_position = np.radians(np.array(
 	    [   #   FR,   FL,   RR,   RL
@@ -272,3 +272,17 @@ if True:
 	    ]
 	))
 	print("Expected joint positions:\n\n"+str(np.round(np.degrees(expected_joint_position),1))+"\n")	
+
+
+if True:
+	joint_position = np.radians(np.array([
+		0.0,		# hips abduction revolute joints
+		180.0,		# hips flexion/extension revolute joints
+		90.0 		# knee flexion/extension revolute joints
+	]))
+	print("joint_position:\n"+str(np.round(np.degrees(joint_position),1)))
+	foot_position_LRF = Kinematics.leg_forward_kinematics_LRF(joint_position, 0, config)
+	print("foot_position_LRF:\n"+str(np.round(foot_position_LRF,3)))
+	IK_joint_position = Kinematics.leg_explicit_inverse_kinematics_LRF(foot_position_LRF,0,config)
+	print("IK computed joint positions:\n\n"+str(np.round(np.degrees(IK_joint_position),1))+"\n")
+

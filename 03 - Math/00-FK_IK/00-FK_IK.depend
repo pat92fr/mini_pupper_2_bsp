@@ -1,11 +1,12 @@
 # depslib dependency file v1.0
-1680036713 source:c:\guithub\minipupper\mini_pupper_2_bsp\03 - math\00-fk_ik\main.cpp
+1680039291 source:c:\guithub\minipupper\mini_pupper_2_bsp\03 - math\00-fk_ik\main.cpp
 	<iostream>
 	"kinematic.h"
 
-1680036371 c:\guithub\minipupper\mini_pupper_2_bsp\03 - math\00-fk_ik\kinematic.h
+1680040599 c:\guithub\minipupper\mini_pupper_2_bsp\03 - math\00-fk_ik\kinematic.h
 	<eigen>
 	<cmath>
+	<algorithm>
 
 1629319318 c:\guithub\minipupper\mini_pupper_2_bsp\03 - math\eigen\eigen
 	"Dense"
