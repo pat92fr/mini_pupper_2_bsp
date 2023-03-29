@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1680131164 source:c:\guithub\minipupper\mini_pupper_2_bsp\05 - ml_api\main.cpp
+	<iostream>
+	"ml-api.h"
+
+1680131142 c:\guithub\minipupper\mini_pupper_2_bsp\05 - ml_api\ml-api.h
+	"Eigen"
+
+1680129375 c:\guithub\minipupper\mini_pupper_2_bsp\05 - ml_api\eigen
+
