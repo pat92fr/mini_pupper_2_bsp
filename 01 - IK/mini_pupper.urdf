@@ -41,13 +41,20 @@
     -->
     <link name="base_link">
         <!--body-->
-        <visual>
+        <!--visual>
             <geometry>
-                <box size="0.180 0.060 0.045"/>
+                <box size="0.180 0.060 0.002"/>
             </geometry>
-            <origin rpy="0 0 0" xyz="0.008 0 0.006"/>
+            <origin rpy="0 0 0" xyz="0.008 0 0.0285"/>
             <material name="white"/>          
-        </visual>
+        </visual-->
+        <!--visual>
+            <geometry>
+                <box size="0.180 0.060 0.002"/>
+            </geometry>
+            <origin rpy="0 0 0" xyz="0.008 0 -0.0165"/>
+            <material name="white"/>          
+        </visual-->
         <collision>
             <geometry>
                 <box size="0.180 0.060 0.045"/>
@@ -56,6 +63,7 @@
         </collision>
 
         <!--body-battery-holder-->
+        <!--
         <visual>
             <geometry>
                 <box size="0.150 0.036 0.008"/>
@@ -74,6 +82,7 @@
             <mass value="0.2"/> 
             <inertia ixx="0.02" ixy="0.0" ixz="0.0" iyy="0.03" iyz="0.0" izz="0.03"/>
         </inertial>
+        -->
     </link>
         
     <!-- 

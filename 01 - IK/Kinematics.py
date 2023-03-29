@@ -7,7 +7,7 @@ import numpy as np
 
 # TRACE macro
 DEBUG = True
-#DEBUG = False
+DEBUG = False
 
 def log(s):
     if DEBUG:

@@ -52,7 +52,7 @@ class Configuration:
         #################### CROUCH ####################
         self.CROUCH_X =  0.059
         self.CROUCH_Y =  0.050        
-        self.CROUCH_Z = -0.035
+        self.CROUCH_Z = -0.030
         self.CROUCH_X_SHIFT   = 0.000
 
         #################### STANCE ####################
