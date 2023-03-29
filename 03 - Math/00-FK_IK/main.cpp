@@ -35,19 +35,20 @@ int main()
     // test 2
     std::cout << "test #2" << std::endl;
     {
-        Eigen::Matrix<float,3,4> jp {
-            { mini_pupper::to_radians(0.0f),      mini_pupper::to_radians(0.0f),      mini_pupper::to_radians(23.0f),     mini_pupper::to_radians(-15.0f) },
-            { mini_pupper::to_radians(180.0f),    mini_pupper::to_radians(90.0f),     mini_pupper::to_radians(125.0f),    mini_pupper::to_radians(180.0f) },
-            { mini_pupper::to_radians(90.0f),     mini_pupper::to_radians(90.0f),     mini_pupper::to_radians(45.0f),     mini_pupper::to_radians(170.0f) }
+        Eigen::Matrix<float,3,4> const jp_deg {
+            { 0.0f,      0.0f,      23.0f,     -15.0f },
+            { 180.0f,    90.0f,     125.0f,    180.0f },
+            { 90.0f,     90.0f,     45.0f,     170.0f }
         };
+        Eigen::Matrix<float,3,4> const jp { mini_pupper::to_radians(jp_deg) };
 
         std::cout << jp << std::endl;
 
-        Eigen::Matrix<float,3,4> lp { kin.four_leg_forward_kinematics_LRF(jp) };
+        Eigen::Matrix<float,3,4> const lp { kin.four_leg_forward_kinematics_LRF(jp) };
 
         std::cout << lp << std::endl;
 
-        Eigen::Matrix<float,3,4> jpik { kin.four_leg_inverse_kinematics_LRF(lp) };
+        Eigen::Matrix<float,3,4> const jpik { kin.four_leg_inverse_kinematics_LRF(lp) };
 
         std::cout << jpik << std::endl;
     }
@@ -57,14 +58,15 @@ int main()
     int errors {0};
     for(int i=0;i<1000;++i)
     {
-        Eigen::Matrix<float,3,4> jp {
-            { mini_pupper::to_radians(0.0f),      mini_pupper::to_radians(0.0f),      mini_pupper::to_radians(23.0f),     mini_pupper::to_radians(-15.0f) },
-            { mini_pupper::to_radians(180.0f),    mini_pupper::to_radians(90.0f),     mini_pupper::to_radians(125.0f),    mini_pupper::to_radians(180.0f) },
-            { mini_pupper::to_radians(90.0f),     mini_pupper::to_radians(90.0f),     mini_pupper::to_radians(45.0f),     mini_pupper::to_radians(170.0f) }
+        Eigen::Matrix<float,3,4> const jp_deg {
+            { 0.0f,      0.0f,      23.0f,     -15.0f },
+            { 180.0f,    90.0f,     125.0f,    180.0f },
+            { 90.0f,     90.0f,     45.0f,     170.0f }
         };
-        Eigen::Matrix<float,3,4> lp { kin.four_leg_forward_kinematics_LRF(jp) };
-        Eigen::Matrix<float,3,4> jpik { kin.four_leg_inverse_kinematics_LRF(lp) };
-        if(jpik!=jp)
+        Eigen::Matrix<float,3,4> const jp { mini_pupper::to_radians(jp_deg) };
+        Eigen::Matrix<float,3,4> const lp { kin.four_leg_forward_kinematics_LRF(jp) };
+        Eigen::Matrix<float,3,4> const jpik { kin.four_leg_inverse_kinematics_LRF(lp) };
+        if(!jpik.isApprox(jp))
             ++errors;
     }
 

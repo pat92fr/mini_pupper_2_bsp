@@ -8,8 +8,14 @@
 
 namespace mini_pupper
 {
-    inline float to_radians(float value) { return value * M_PI/180.0f; };
-    inline float to_degrees(float value) { return value * 180.0f/M_PI; };
+    //inline float to_radians(float value = 1.0) { return value * M_PI/180.0f; };
+    //inline float to_degrees(float value = 1.0) { return value * 180.0f/M_PI; };
+    
+    template<typename T>
+    T to_radians(T const & value) { return value * (M_PI/180.0f); };
+    template<typename T>
+    T to_degrees(T const & value) { return value * (180.0f/M_PI); };
+    
 
     enum LEG_ID
     {
