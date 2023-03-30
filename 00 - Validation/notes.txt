@@ -65,7 +65,6 @@ T01. ESP32 LL API performances
 	 500Hz nominal (dt = 2ms)
 	1000Hz target  (dt = 1ms) 
  	Result :
-		ubuntu@mp2:~/mini_pupper_2_bsp/esp32_api$ ./esp32-api
 		1000x control-feedback delay:640ms (erros count:0)
 		control-feedback frequency:1562.5 Hz
 
