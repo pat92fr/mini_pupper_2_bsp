@@ -3,7 +3,7 @@
 #define _JOINTS_H
 
 #include "Eigen"
-#include "Eigen/Dense"
+#include "Dense"
 
 namespace mini_pupper
 {

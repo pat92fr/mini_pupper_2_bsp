@@ -76,17 +76,26 @@ namespace mini_pupper
             // todo:    joint_position[1:2] = np.fmod(joint_position[1:2] + 2*np.pi, 2 * np.pi)
         }
 
-        Eigen::Matrix<float,3,4> four_leg_inverse_kinematics_LRF(Eigen::Matrix<float,3,4> const & foot_position) const
+        Eigen::Matrix<float,3,4> four_leg_inverse_kinematics_LRF(Eigen::Matrix<float,3,4> const & foot_position_LRF) const
         {
             Eigen::Matrix<float,3,4> m;
-            m.col(LEG_FR) = leg_inverse_kinematics_LRF(foot_position.col(LEG_FR),LEG_FR);
-            m.col(LEG_FL) = leg_inverse_kinematics_LRF(foot_position.col(LEG_FL),LEG_FL);
-            m.col(LEG_RR) = leg_inverse_kinematics_LRF(foot_position.col(LEG_RR),LEG_RR);
-            m.col(LEG_RL) = leg_inverse_kinematics_LRF(foot_position.col(LEG_RL),LEG_RL);
+            m.col(LEG_FR) = leg_inverse_kinematics_LRF(foot_position_LRF.col(LEG_FR),LEG_FR);
+            m.col(LEG_FL) = leg_inverse_kinematics_LRF(foot_position_LRF.col(LEG_FL),LEG_FL);
+            m.col(LEG_RR) = leg_inverse_kinematics_LRF(foot_position_LRF.col(LEG_RR),LEG_RR);
+            m.col(LEG_RL) = leg_inverse_kinematics_LRF(foot_position_LRF.col(LEG_RL),LEG_RL);
             return m;
         }
 
-
+        Eigen::Matrix<float,3,4> four_leg_inverse_kinematics_BRF(Eigen::Matrix<float,3,4> const & foot_position_BRF) const
+        {
+            Eigen::Matrix<float,3,4> const m { (foot_position_BRF-LEG_ORIGIN) };
+            Eigen::Matrix<float,3,4> foot_position_LRF;
+            foot_position_LRF.col(LEG_FR) = ROTATION_BRF_TO_LRF*m.col(LEG_FR);
+            foot_position_LRF.col(LEG_FL) = ROTATION_BRF_TO_LRF*m.col(LEG_FL);
+            foot_position_LRF.col(LEG_RR) = ROTATION_BRF_TO_LRF*m.col(LEG_RR);
+            foot_position_LRF.col(LEG_RL) = ROTATION_BRF_TO_LRF*m.col(LEG_RL);
+            return four_leg_inverse_kinematics_LRF(foot_position_LRF); 
+        }
 
 
 
@@ -106,6 +115,18 @@ namespace mini_pupper
             -ABDUCTION_OFFSET,
              ABDUCTION_OFFSET,
         };
+        
+        Eigen::Matrix<float,3,3> ROTATION_BRF_TO_LRF {
+            { 0, 0, 1 },
+            { 0, 1, 0 },
+            {-1, 0, 0 }
+        }; 
+
+        Eigen::Matrix<float,3,4> LEG_ORIGIN {
+            { LEG_OX,     LEG_OX,      -LEG_OX,     -LEG_OX },
+            {-LEG_OY,     LEG_OY,      -LEG_OY,      LEG_OY },
+            { LEG_OZ,     LEG_OZ,       LEG_OZ,      LEG_OZ }
+        };        
 
         inline float cos_law_c(float a, float b, float angle) const
         {
