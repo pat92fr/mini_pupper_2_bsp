@@ -14,8 +14,8 @@ Tests :
 # T03. UDP comm performance on RPi4 (ping/pong two processes)
 # T04b. (FK/IK/J) x 4 legs cycle performance on RPi4 using CPP
 # T05. ROS2 comm performance on RPi4 (Topic Hz)
+# T06. Compare foot trajectory at 200Hz and 500Hz, based on IK PY/CPP
 
-#T06. Compare foot trajectory at 200Hz and 500Hz, based on IK PY/CPP
 
 
 Tasks :
@@ -91,3 +91,11 @@ T01. ESP32 LL API performances
 	Result FK+IK only (no optimization) :
 		1000x fk-ik delay:24ms (count:1000)
 		fk-ik frequency:41666.7 Hz
+
+# T07. (pose + IK + esp32) cycle performance
+ 	 200Hz min     (dt = 5ms)
+	 500Hz nominal (dt = 2ms)
+	1000Hz target  (dt = 1ms) 
+	Result (-O2) :
+		1000x ik-bus delay:642ms (erros count:0)
+		ik-bus frequency:1557.63 Hz

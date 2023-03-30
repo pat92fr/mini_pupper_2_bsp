@@ -107,6 +107,17 @@ namespace mini_pupper
         float LEG_LF {0.050f};
         float LEG_LT {0.060f};
 
+        float STANCE_X {0.059f};
+        float STANCE_Y {0.050f};
+        float STANCE_Z {-0.080f};
+        float STANCE_X_SHIFT {0.000f};
+
+        Eigen::Matrix<float,3,4> standby_pose_BRF {
+            {  STANCE_X+STANCE_X_SHIFT, STANCE_X+STANCE_X_SHIFT,-STANCE_X+STANCE_X_SHIFT,  -STANCE_X+STANCE_X_SHIFT },
+            { -STANCE_Y,                STANCE_Y,               -STANCE_Y,                  STANCE_Y },
+            {  STANCE_Z,                STANCE_Z,                STANCE_Z,                  STANCE_Z }
+        };
+
     private:
 
         float ABDUCTION_OFFSETS[4] {

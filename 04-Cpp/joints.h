@@ -5,23 +5,19 @@
 #include "Eigen"
 #include "Dense"
 
+
+#include <algorithm>
+
 namespace mini_pupper
 {
 
-    struct ml_api
+    struct joints
     {
-        void set_position(Eigen::Array<float,3,4> const & joint_position_rad) const
+        void position_setpoint(Eigen::Array<float,3,4> const & joint_position_rad, int servo_position[12]) const
         {
             Eigen::Array<float,3,4> servo_position_f = (joint_position_rad-calibration_position_rad)*direction*scale+512.0f;
-            Eigen::Array<int,3,4> servo_position = servo_position_f.cast<int>();
-
-            //std::cout  << servo_position << servo_position.reshaped(12,1) << std::endl;
-            int * servo = servo_position.data();
-            for(size_t index=0; index<12; ++index)
-            {
-                std::cout  << servo[index] << std::endl;
-            }
-
+            Eigen::Array<int,3,4> servo_position_i = servo_position_f.cast<int>();
+            std::copy(servo_position_i.data(), servo_position_i.data()+12, servo_position);
         }
 
         Eigen::Array<float,3,4> calibration_position_rad {
