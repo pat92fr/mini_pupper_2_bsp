@@ -1,36 +1,32 @@
 Arch :
 ------
 
-LL API : joint position to ESP32 comm
-
-ML API : Foot position to joint angle to joint position, fusion filter, servo direction and mapping
-
-HL API : velocities & attitude & state, gait to foot position, odom
+LL API : ESP32 comm
+ML API : Joint / Kinematic / todo : J, GRF, Fusion Filter
+HL API : Pose (height, pitch, roll, yaw) & Gait (vx,vy,w) & States (REST, STANDBY..) + Odom
 
 Tests :
 -------
-
 
 # T03. UDP comm performance on RPi4 (ping/pong two processes)
 # T04b. (FK/IK/J) x 4 legs cycle performance on RPi4 using CPP
 # T05. ROS2 comm performance on RPi4 (Topic Hz)
 # T06. Compare foot trajectory at 200Hz and 500Hz, based on IK PY/CPP
 
-
-
 Tasks :
 -------
 
-W03. FK/IK/J CPP impl. ==> ML API
 W04. REST pose impl.
-W05. STAND-BY pose impl.
 W06. CIRCLE trajectory impl. and maximum BW measure
-W07. TROT trajectory impl. and maximum BW measure
 W08. IMU fusion filter
+
+W07. TROT trajectory impl. and maximum BW measure
 W09. ODOM from gait
-W10. Height and CoM control
-W11. Overlay and period control
+W10. Height and CoM dynamic control
+W11. Overlay and period dynamic control
 W12. Servo scale (pos/angle) check and adjust scale
+
+W03b. J CPP impl. ==> ML API
 
 ESP32 FW :
 ----------
@@ -59,6 +55,9 @@ Done !
 W01. IK documentation (jupyter lab)
 W02. IK Python impl.  (jupyter lab)
 W02b. IK Python impl. (explicit method) (jupyter lab)
+W03. FK/IK CPP impl. ==> ML API
+W05. STAND-BY pose impl.
+
 T01. ESP32 LL API performances
 
  	 200Hz min     (dt = 5ms)
