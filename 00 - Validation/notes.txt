@@ -16,6 +16,7 @@ Tests :
 Tasks :
 -------
 
+W09. Port IK on ESP32 and speed test (1000Hz) ?
 W08. IMU fusion filter
 
 W07. TROT trajectory impl. and maximum BW measure
