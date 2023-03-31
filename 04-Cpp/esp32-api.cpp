@@ -153,7 +153,7 @@ int esp32_api::update(parameters_control_instruction_format & control, parameter
     result = write(_fd, (char *)tx_buffer, tx_buffer_size);
     if(result != (ssize_t)tx_buffer_size)
     {
-        printf("failed to write to port (%d,%d,fd=%d)\r\n",result,tx_buffer_size,_fd);
+        printf("failed to write to port (%d,%ld,fd=%d)\r\n",result,tx_buffer_size,_fd);
         return API_LL_ERROR;
     }
     if (print_debug_max)

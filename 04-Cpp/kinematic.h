@@ -61,11 +61,11 @@ namespace mini_pupper
             float const HF_dist { sqrtf( HF_dist_sq ) };
             float const FCH { cos_law_A(CF_dist,ABDUCTION_OFFSET,HF_dist) };
             static float const ANGLE_SIGN[4] { 1.0f, -1.0f, 1.0f, -1.0f };
-            float const HIPS_A { CF_angle + ANGLE_SIGN[leg_index] * (FCH - M_PI/2.0f) };
+            float const HIPS_A { CF_angle + ANGLE_SIGN[leg_index] * (FCH - (float)M_PI/2.0f) };
             float const L { sqrtf( powf(foot_position[2],2.0f) + HF_dist_sq) };
             float const Alpha { atan2f(HF_dist,-foot_position[2]) };
             float const HIPS { Alpha + cos_law_A(L,LEG_LF,LEG_LT) };
-            float const KNEE { cos_law_A(LEG_LF,LEG_LT,L) - M_PI + HIPS };
+            float const KNEE { cos_law_A(LEG_LF,LEG_LT,L) - (float)M_PI + HIPS };
             /*
             std::cout << "CF_dist: " << CF_dist << std::endl;
             std::cout << "CF_angle: " << to_degrees(CF_angle) << std::endl;
@@ -112,10 +112,21 @@ namespace mini_pupper
         float STANCE_Z {-0.080f};
         float STANCE_X_SHIFT {0.000f};
 
+        float CROUCH_X {0.059f};
+        float CROUCH_Y {0.050f};
+        float CROUCH_Z {-0.030f};
+        float CROUCH_X_SHIFT {0.000f};
+
         Eigen::Matrix<float,3,4> standby_pose_BRF {
             {  STANCE_X+STANCE_X_SHIFT, STANCE_X+STANCE_X_SHIFT,-STANCE_X+STANCE_X_SHIFT,  -STANCE_X+STANCE_X_SHIFT },
             { -STANCE_Y,                STANCE_Y,               -STANCE_Y,                  STANCE_Y },
             {  STANCE_Z,                STANCE_Z,                STANCE_Z,                  STANCE_Z }
+        };
+
+        Eigen::Matrix<float,3,4> crouch_pose_BRF {
+            {  CROUCH_X+CROUCH_X_SHIFT, CROUCH_X+CROUCH_X_SHIFT,-CROUCH_X+CROUCH_X_SHIFT,  -CROUCH_X+CROUCH_X_SHIFT },
+            { -CROUCH_Y,                CROUCH_Y,               -CROUCH_Y,                  CROUCH_Y },
+            {  CROUCH_Z,                CROUCH_Z,                CROUCH_Z,                  CROUCH_Z }
         };
 
     private:
