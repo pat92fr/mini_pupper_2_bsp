@@ -16,8 +16,6 @@ Tests :
 Tasks :
 -------
 
-W04. REST pose impl.
-W06. CIRCLE trajectory impl. and maximum BW measure
 W08. IMU fusion filter
 
 W07. TROT trajectory impl. and maximum BW measure
@@ -25,6 +23,7 @@ W09. ODOM from gait
 W10. Height and CoM dynamic control
 W11. Overlay and period dynamic control
 W12. Servo scale (pos/angle) check and adjust scale
+W13. More real-time reliable ESP32 API (time-out occur from time to time)
 
 W03b. J CPP impl. ==> ML API
 
@@ -57,6 +56,8 @@ W02. IK Python impl.  (jupyter lab)
 W02b. IK Python impl. (explicit method) (jupyter lab)
 W03. FK/IK CPP impl. ==> ML API
 W05. STAND-BY pose impl.
+W04. REST pose impl.
+W06. CIRCLE trajectory impl. and maximum BW measure
 
 T01. ESP32 LL API performances
 
@@ -97,3 +98,12 @@ T01. ESP32 LL API performances
 	Result (-O2) :
 		1000x ik-bus delay:642ms (erros count:0)
 		ik-bus frequency:1557.63 Hz
+
+# T08. Circle BW performance
+	radius = 0.020 m
+	* period = 1.0s ==> OK
+	* period = 0.5s ==> OK
+	* period = 0.33s ==> OK
+	* period = 0.25s ==> OK
+	--- Limit ---
+	* period = 0.20s ==> X-tracking GOOD, Z-tracking ALTERED
