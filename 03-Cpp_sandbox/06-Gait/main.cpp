@@ -7,8 +7,11 @@ using namespace std;
 #include "mini_pupper.h"
 using namespace mini_pupper;
 
+// TODO : velocity smoother : config (acc x/y, acc wz, min/max vx,vy,wz) + velocities (vx,vy,wz) ==> (walk, vx, vy, wz filtered/capped)
 
+// TODO : config(height) + (state, alpha, vx, vy, wz filtered) ==> dX,dY,dZ around STANCE POSE
 
+// CoM dynamic control
 
 int main()
 {
