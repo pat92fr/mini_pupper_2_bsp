@@ -21,6 +21,9 @@ namespace mini_pupper
 };
 
 #include "mini_pupper_config.h"
+#include "mini_pupper_kinematics.h"
 #include "mini_pupper_gait_phase.h"
+#include "mini_pupper_gait_velocity_smoother.h"
+#include "mini_pupper_gait_center_of_curvature.h"
 
 #endif // MINI_PUPPER_H_INCLUDED

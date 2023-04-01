@@ -1,0 +1,11 @@
+#ifndef MINI_PUPPER_KINEMATICS_H_INCLUDED
+#define MINI_PUPPER_KINEMATICS_H_INCLUDED
+
+namespace mini_pupper
+{
+
+
+
+};
+
+#endif // MINI_PUPPER_KINEMATICS_H_INCLUDED

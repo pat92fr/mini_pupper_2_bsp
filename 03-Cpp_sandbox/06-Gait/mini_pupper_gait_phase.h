@@ -4,8 +4,8 @@
 namespace mini_pupper
 {
     // Phase :
-    //  convert real-time into state and alpha [0,1[ for one leg
-    //  when not walking, state = STANCE and alpha = 0.5
+    // - Convert real-time into state (STANCE/SWING) and alpha [0,1[ for a leg
+    // - When not walking, enforce state = STANCE and alpha = 0.5
 
     struct gait_phase
     {
