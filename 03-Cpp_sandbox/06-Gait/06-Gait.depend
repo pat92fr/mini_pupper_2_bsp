@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1680375831 source:c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\main.cpp
+1680380671 source:c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\main.cpp
 	<iostream>
 	<fstream>
 	<vector>
@@ -27,5 +27,8 @@
 
 1680375713 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\eigen
 
-1680375576 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\mini_pupper_gait_center_of_curvature.h
+1680380552 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\mini_pupper_gait_center_of_curvature.h
+	"Eigen"
+	<cmath>
+	<algorithm>
 

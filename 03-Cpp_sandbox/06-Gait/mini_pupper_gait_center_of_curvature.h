@@ -1,37 +1,66 @@
 #ifndef MINI_PUPPER_GAIT_CENTER_OF_CURVATURE_H_INCLUDED
 #define MINI_PUPPER_GAIT_CENTER_OF_CURVATURE_H_INCLUDED
 
+#include "Eigen"
+#include <cmath>
+#include <algorithm>
+
 namespace mini_pupper
 {
-/*
-self.rotate = abs(w_speed_dps) > 5.0 # threshold 5°/s
-		self.CoM_CoC_distance_m = 0.0
-		self.CoM_CoC_angle_rad = 0.0
-		if self.rotate:
-			self.CoM_CoC_distance_m = abs(self.CoM_linear_speed_mps/math.radians(w_speed_dps))
-			if w_speed_dps > 0:
-				self.CoM_CoC_angle_rad = math.atan2(y_speed_mps,x_speed_mps)+math.pi/2
-			else:
-				self.CoM_CoC_angle_rad = math.atan2(y_speed_mps,x_speed_mps)-math.pi/2
 
-			# compute CoC position in the XY plane centered on CoM of body
-			self.CoC = np.array(
-				[
-					self.CoM_CoC_distance_m*math.cos(self.CoM_CoC_angle_rad),
-					self.CoM_CoC_distance_m*math.sin(self.CoM_CoC_angle_rad),
-					0.0
-				]
-			)
-			self.CoC = np.expand_dims(self.CoC, axis=1)
-			#print("CoC:"+str(self.CoC))
 
-			#print("Rotate velocity")
-			self.ALL_mean_speed_mps = (self.CoM_CoC_distance_m+0.25)*math.radians(w_speed_dps) # distance from CoM to LEG
-		else:
-			#print("Inline velocity")
-			self.ALL_mean_speed_mps = self.CoM_linear_speed_mps
+    struct center_of_curvature
+    {
+        center_of_curvature(
+            config & cfg
+        ) :
+        _cfg(cfg)
+        {};
 
-*/
+        void update(
+            float vx,
+            float vy,
+            float wz )
+        {
+            turning = fabs(wz) >= _cfg.wz_min_rps;
+            if(turning)
+            {
+                distance = fabs(sqrtf(vx*vx+vy*vy)/wz);
+                if(wz>0.0f)
+                    angle = atan2f(vy,vx)+0.5f*M_PI;
+                else
+                    angle = atan2f(vy,vx)-0.5f*M_PI;
+                position_BRF[0] = distance*cosf(angle);
+                position_BRF[1] = distance*sinf(angle);
+                position_BRF[2] = 0.0f;
+            }
+            else
+            {
+                distance = 0.0f;
+                angle = 0.0f;
+                position_BRF = Eigen::Vector3f::Zero();
+            }
+
+        }
+
+        // distance from CoM in BRF
+        float distance {0.0f};
+
+        // angle (TRIGO) about Z axis in BRF
+        float angle {0.0f};
+
+        // position of CoM in BRF
+        Eigen::Vector3f position_BRF {0.0f, 0.0f, 0.0f };
+
+        // turning
+        bool turning {false};
+
+    private:
+
+        // reference to current configuration
+        config & _cfg;
+    };
+
 };
 
 #endif // MINI_PUPPER_GAIT_CENTER_OF_CURVATURE_H_INCLUDED

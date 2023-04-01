@@ -8,9 +8,6 @@ using namespace std;
 #include "mini_pupper.h"
 using namespace mini_pupper;
 
-
-// TODO : CoC computation based on velocity => CoM_CoC_distance_m, CoM_CoC_angle_rad, CoC XY in BRF
-
 // TODO : one leg trajectory generator : configuration, filtered velocity, CoC computation (curve), phase
 // TODO : config(height) + (state, alpha, vx, vy, wz filtered) ==> dX,dY,dZ around STANCE POSE
 // CoM dynamic control
@@ -27,10 +24,19 @@ int main()
         { cfg, LEG_RR },
         { cfg, LEG_RL }
     };
+    center_of_curvature coc(cfg);
     kinematic kin;
 
     // simulate timer-task
     ofstream file("gai.csv");
+    file << "time_s" << ";" ;
+    file << "vx" << ";" << "vel_smo.get_vx()" << ";";
+    file << "vy" << ";" << "vel_smo.get_vy()" << ";";
+    file << "wz" << ";" << "vel_smo.get_wz()" << ";";
+    file << "coc.distance" << ";" << "coc.angle" << ";" << "coc.position_BRF[0]" << ";" << "coc.position_BRF[1]" << ";";
+    file << "phase[0].get_state()" << ";" << "phase[1].get_state()" << ";" << "phase[2].get_state()" << ";" << "phase[3].get_state()" << ";";
+    file << "phase[0].is_centered()" << ";" << "phase[1].is_centered()" << ";" << "phase[2].is_centered()" << ";" << "phase[3].is_centered()" << endl;
+
     for(float time_s=0.0f; time_s<6.0f; time_s+=cfg.dt)
     {
 
@@ -48,7 +54,7 @@ int main()
 
         if(time_s > 1.0f)
             vy = 0.10f;
-        if(time_s > 2.5f)
+        if(time_s > 3.5f)
             vy = 0.0f;
 
         if(time_s > 3.0f)
@@ -56,18 +62,20 @@ int main()
         if(time_s > 4.0f)
             wz = 0.0f;
 
-
-        //bool walk { time_s > 0.5f && time_s < 2.5f };
+        // gait computation
 
         vel_smo.update(vx,vy,wz);
+
+        coc.update(vel_smo.get_vx(),vel_smo.get_vy(),vel_smo.get_wz());
+
         for(auto & p : phase)
             p.update(time_s,vel_smo.is_moving());
 
-        //file << time_s << ";" << phase[0]._state << ";" << phase[0]._alpha << ";" << phase[1]._state << ";" << phase[1]._alpha << endl;
         file << time_s << ";" ;
         file << vx << ";" << vel_smo.get_vx() << ";";
         file << vy << ";" << vel_smo.get_vy() << ";";
         file << wz << ";" << vel_smo.get_wz() << ";";
+        file << coc.distance << ";" << coc.angle << ";" << coc.position_BRF[0] << ";" << coc.position_BRF[1] << ";";
         file << phase[0].get_state() << ";" << phase[1].get_state() << ";" << phase[2].get_state() << ";" << phase[3].get_state() << ";";
         file << phase[0].is_centered() << ";" << phase[1].is_centered() << ";" << phase[2].is_centered() << ";" << phase[3].is_centered() << endl;
     }
