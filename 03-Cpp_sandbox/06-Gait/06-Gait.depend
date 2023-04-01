@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1680351979 source:c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\main.cpp
+	<iostream>
+	<fstream>
+	<vector>
+	<cmath>
+
