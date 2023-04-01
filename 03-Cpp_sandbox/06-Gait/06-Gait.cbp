@@ -33,6 +33,9 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="main.cpp" />
+		<Unit filename="mini_pupper.h" />
+		<Unit filename="mini_pupper_config.h" />
+		<Unit filename="mini_pupper_gait_phase.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
