@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1680374854 source:c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\main.cpp
+1680375831 source:c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\main.cpp
 	<iostream>
 	<fstream>
 	<vector>
@@ -7,14 +7,25 @@
 	<algorithm>
 	"mini_pupper.h"
 
-1680374624 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\mini_pupper.h
+1680375672 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\mini_pupper.h
 	"mini_pupper_config.h"
+	"mini_pupper_kinematics.h"
 	"mini_pupper_gait_phase.h"
 	"mini_pupper_gait_velocity_smoother.h"
+	"mini_pupper_gait_center_of_curvature.h"
 
-1680374572 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\mini_pupper_config.h
+1680376048 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\mini_pupper_config.h
 
-1680366875 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\mini_pupper_gait_phase.h
+1680376402 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\mini_pupper_gait_phase.h
 
-1680374869 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\mini_pupper_gait_velocity_smoother.h
+1680375211 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\mini_pupper_gait_velocity_smoother.h
+
+1680375782 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\mini_pupper_kinematics.h
+	"Eigen"
+	<cmath>
+	<algorithm>
+
+1680375713 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\eigen
+
+1680375576 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\mini_pupper_gait_center_of_curvature.h
 

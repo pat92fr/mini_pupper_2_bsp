@@ -36,8 +36,6 @@ namespace mini_pupper
                 if( walk && (_last_local_time_s<(0.5f*_cfg.stance_s)) && (local_time_s>=(0.5f*_cfg.stance_s)) )
                     _walking = true;
             }
-            // save time for walking state machine transition
-            _last_local_time_s = local_time_s;
 
             // compute state and alpha according time and config
             if(_walking)
@@ -46,18 +44,26 @@ namespace mini_pupper
                 {
                     _state = PHASE_STANCE;
                     _alpha = local_time_s/_cfg.stance_s;
+
+                    _centered = _last_local_time_s<(0.5f*_cfg.stance_s) && local_time_s>=(0.5f*_cfg.stance_s);
                 }
                 else
                 {
                     _state = PHASE_SWING;
                     _alpha = (local_time_s-_cfg.stance_s)/(_cfg.period_s-_cfg.stance_s);
+                    _centered = _last_local_time_s<(_cfg.stance_s+0.5f*(_cfg.period_s-_cfg.stance_s)) && local_time_s>=(_cfg.stance_s+0.5f*(_cfg.period_s-_cfg.stance_s));
                 }
             }
             else // standby
             {
                 _state = PHASE_STANCE;
                 _alpha = 0.5f;
+                _centered = false;
             }
+
+            // save time for walking state machine transition
+            _last_local_time_s = local_time_s;
+
         }
 
         PHASE_STATE get_state() const
@@ -73,6 +79,11 @@ namespace mini_pupper
         bool is_walking() const
         {
             return _walking;
+        }
+
+        bool is_centered() const
+        {
+            return _centered;
         }
 
     private:
@@ -91,6 +102,9 @@ namespace mini_pupper
 
         // leg is walking or not
         bool _walking {false};
+
+        // leg is centered (middle of STANCE or SWING
+        bool _centered {false};
 
         // last iteration local real-time
         float _last_local_time_s {0};

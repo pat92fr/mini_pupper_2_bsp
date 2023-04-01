@@ -27,7 +27,7 @@ int main()
         { cfg, LEG_RR },
         { cfg, LEG_RL }
     };
-
+    kinematic kin;
 
     // simulate timer-task
     ofstream file("gai.csv");
@@ -68,7 +68,8 @@ int main()
         file << vx << ";" << vel_smo.get_vx() << ";";
         file << vy << ";" << vel_smo.get_vy() << ";";
         file << wz << ";" << vel_smo.get_wz() << ";";
-        file << phase[0].get_state() << ";" << phase[1].get_state() << ";" << phase[2].get_state() << ";" << phase[3].get_state() << endl;
+        file << phase[0].get_state() << ";" << phase[1].get_state() << ";" << phase[2].get_state() << ";" << phase[3].get_state() << ";";
+        file << phase[0].is_centered() << ";" << phase[1].is_centered() << ";" << phase[2].is_centered() << ";" << phase[3].is_centered() << endl;
     }
     return 0;
 }
