@@ -81,9 +81,9 @@ int main()
         float wz {0.0f};
 
         if(time_s > 0.1f)
-            vx = 0.05f; // 0.05f
+            vx = 0.00f; // 0.05f
         if(time_s > 2.5f)
-            vx = 0.2f; // 0.2f
+            vx = 0.0f; // 0.2f
         if(time_s > 4.5f)
             vx = 0.0f;
 
@@ -93,7 +93,7 @@ int main()
             vy = 0.0f;
 
         if(time_s > 3.0f)
-            wz = 1.0f; //1.0f;
+            wz = 0.0f; //1.0f;
         if(time_s > 4.0f)
             wz = 0.0f;
 
