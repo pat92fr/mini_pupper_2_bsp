@@ -18,7 +18,6 @@ int main()
 
     config cfg;
     velocity_smoother vel_smo(cfg);
-    center_of_curvature coc(cfg);
     vector<gait_phase> phase {
         { cfg, LEG_FR },
         { cfg, LEG_FL },
@@ -40,7 +39,7 @@ int main()
     file << "vx" << ";" << "vel_smo.get_vx()" << ";";
     file << "vy" << ";" << "vel_smo.get_vy()" << ";";
     file << "wz" << ";" << "vel_smo.get_wz()" << ";";
-    file << "coc.distance" << ";" << "coc.angle" << ";" << "coc.position_BRF[0]" << ";" << "coc.position_BRF[1]" << ";";
+    //file << "coc.distance" << ";" << "coc.angle" << ";" << "coc.position_BRF[0]" << ";" << "coc.position_BRF[1]" << ";";
     file << "phase[0].get_state()" << ";" << "phase[1].get_state()" << ";" << "phase[2].get_state()" << ";" << "phase[3].get_state()" << ";";
     file << "phase[0].is_centered()" << ";" << "phase[1].is_centered()" << ";" << "phase[2].is_centered()" << ";" << "phase[3].is_centered()" << endl;
 
@@ -80,7 +79,7 @@ int main()
         // gait computation
 
         vel_smo.update(vx,vy,wz);
-        coc.update(vel_smo.get_vx(),vel_smo.get_vy(),vel_smo.get_wz());
+
 
         for(auto & p : phase)
             p.update(time_s,vel_smo.is_moving());
@@ -95,7 +94,7 @@ int main()
         file << vx << ";" << vel_smo.get_vx() << ";";
         file << vy << ";" << vel_smo.get_vy() << ";";
         file << wz << ";" << vel_smo.get_wz() << ";";
-        file << coc.distance << ";" << coc.angle << ";" << coc.position_BRF[0] << ";" << coc.position_BRF[1] << ";";
+        //file << coc.distance << ";" << coc.angle << ";" << coc.position_BRF[0] << ";" << coc.position_BRF[1] << ";";
         file << phase[0].get_state() << ";" << phase[1].get_state() << ";" << phase[2].get_state() << ";" << phase[3].get_state() << ";";
         file << phase[0].is_centered() << ";" << phase[1].is_centered() << ";" << phase[2].is_centered() << ";" << phase[3].is_centered() << endl;
     }

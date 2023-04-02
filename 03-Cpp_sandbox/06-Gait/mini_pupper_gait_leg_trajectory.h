@@ -17,7 +17,8 @@ namespace mini_pupper
         ) :
         _cfg(cfg),
         _leg(leg),
-        _phase(phase)
+        _phase(phase),
+        _coc(_cfg)
         {};
 
         void update(
@@ -32,6 +33,20 @@ namespace mini_pupper
             float yaw
         )
         {
+            // 1. capture speed when leg centered
+            if(_phase.is_centered())
+            {
+                _vx = vx;
+                _vy = vy;
+                _wz = wz;
+                _coc.update(_vx,_vy,_wz);
+            }
+
+            // turning
+
+
+
+
 
         }
 
@@ -45,6 +60,14 @@ namespace mini_pupper
 
         // reference to source phase
         gait_phase & _phase;
+
+        // internal velocity
+        float _vx {0.0f};
+        float _vy {0.0f};
+        float _wz {0.0f};
+
+        // internal coc
+        center_of_curvature _coc;
 
     };
 
