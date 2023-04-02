@@ -14,7 +14,6 @@ Tests :
 # T06. Compare foot trajectory at 200Hz and 500Hz, based on IK PY/CPP
 # T09. Tester performances sous ESP32 avec monitor.
 
-# T10. Tester performances Gait/IK et Gait/IK/ESP32 en CPP
 
 Tasks :
 -------
@@ -111,3 +110,13 @@ T01. ESP32 LL API performances
 	* period = 0.25s ==> OK
 	--- Limit ---
 	* period = 0.20s ==> X-tracking GOOD, Z-tracking ALTERED
+
+# T10a. Tester performances Gait/IK en CPP (1000 iteration)
+	delay:3ms (error count:0)
+	frequency:666667 Hz
+	delay:5ms (error count:0)
+	frequency:400000 Hz
+
+# T10b. Tester performances Gait/IK/ESP32 en CPP
+	(1000x) delay:1285ms (error count:0)
+	frequency:1556.42 Hz
