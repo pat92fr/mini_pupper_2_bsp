@@ -4,8 +4,6 @@
 
 #include "Eigen"
 #include "Dense"
-
-
 #include <algorithm>
 
 namespace mini_pupper
@@ -16,6 +14,8 @@ namespace mini_pupper
         void position_setpoint(Eigen::Array<float,3,4> const & joint_position_rad, int servo_position[12]) const
         {
             Eigen::Array<float,3,4> servo_position_f = (joint_position_rad-calibration_position_rad)*direction*scale+512.0f;
+            for(size_t index=0; index<12; ++ index)
+                servo_position_f(index) = std::max( 1.0f, std::min( 1022.0f, servo_position_f(index) ) );
             Eigen::Array<int,3,4> servo_position_i = servo_position_f.cast<int>();
             std::copy(servo_position_i.data(), servo_position_i.data()+12, servo_position);
         }

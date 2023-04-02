@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1680448611 source:c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\main.cpp
+1680458778 source:c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\main.cpp
 	<iostream>
 	<fstream>
 	<vector>
@@ -35,12 +35,12 @@
 	<cmath>
 	<algorithm>
 
-1680423784 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\mini_pupper_gait_leg_trajectory.h
+1680458589 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\mini_pupper_gait_leg_trajectory.h
 	"Eigen"
 	<cmath>
 	<algorithm>
 
-1680448088 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\mini_pupper_joints.h
+1680457624 c:\guithub\minipupper\mini_pupper_2_bsp\03-cpp_sandbox\06-gait\mini_pupper_joints.h
 	"Eigen"
 	"Dense"
 	<algorithm>

@@ -72,6 +72,7 @@ namespace mini_pupper
                     Eigen::Vector3f const _LO_to_TD_foot_BRF {_TD_foot_BRF-_LO_foot_BRF};
                     // foot
                     _foot_BRF = _LO_foot_BRF + _LO_to_TD_foot_BRF*_phase.get_alpha();
+                    _foot_BRF[2] = _foot_origin_BRF[2] + _cfg.swing_height*sinf(_phase.get_alpha()*M_PI);
                 }
             }
             else // straight
@@ -88,8 +89,8 @@ namespace mini_pupper
                 else // PHASE_SWING
                 {
                     Eigen::Vector3f const delta {
-                        vx*(_cfg.period_s-_cfg.stance_s)*(_phase.get_alpha()-0.5f),
-                        vy*(_cfg.period_s-_cfg.stance_s)*(_phase.get_alpha()-0.5f),
+                        vx*_cfg.stance_s*(_phase.get_alpha()-0.5f),
+                        vy*_cfg.stance_s*(_phase.get_alpha()-0.5f),
                         _cfg.swing_height*sinf(_phase.get_alpha()*M_PI)
                     };
                     _foot_BRF = _foot_origin_BRF + delta;

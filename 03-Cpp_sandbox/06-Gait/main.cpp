@@ -60,7 +60,12 @@ int main()
     file << "wz" << ";" << "vel_smo.get_wz()" << ";";
     //file << "coc.distance" << ";" << "coc.angle" << ";" << "coc.position_BRF[0]" << ";" << "coc.position_BRF[1]" << ";";
     file << "phase[0].get_state()" << ";" << "phase[1].get_state()" << ";" << "phase[2].get_state()" << ";" << "phase[3].get_state()" << ";";
-    file << "phase[0].is_centered()" << ";" << "phase[1].is_centered()" << ";" << "phase[2].is_centered()" << ";" << "phase[3].is_centered()" << endl;
+    file << "phase[0].is_centered()" << ";" << "phase[1].is_centered()" << ";" << "phase[2].is_centered()" << ";" << "phase[3].is_centered()" << ";";
+
+    file << "leg[0].get_foot_BRF()[0]" << ";" << "leg[0].get_foot_BRF()[1]" << ";" << "leg[0].get_foot_BRF()[2]" << ";";
+
+    file << "servo_position[0]" << ";" << "servo_position[1]" << ";" << "servo_position[2]" << endl;
+
 
     milliseconds t0_ms = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
     size_t counter {0};
@@ -76,19 +81,19 @@ int main()
         float wz {0.0f};
 
         if(time_s > 0.1f)
-            vx = 0.05f;
+            vx = 0.05f; // 0.05f
         if(time_s > 2.5f)
-            vx = 0.2f;
+            vx = 0.2f; // 0.2f
         if(time_s > 4.5f)
             vx = 0.0f;
 
         if(time_s > 1.0f)
-            vy = 0.0f;
+            vy = 0.0f; // 0.5f
         if(time_s > 3.5f)
             vy = 0.0f;
 
         if(time_s > 3.0f)
-            wz = 1.0f;
+            wz = 1.0f; //1.0f;
         if(time_s > 4.0f)
             wz = 0.0f;
 
@@ -138,13 +143,16 @@ int main()
         file << phase[0].get_state() << ";" << phase[1].get_state() << ";" << phase[2].get_state() << ";" << phase[3].get_state() << ";";
         file << phase[0].is_centered() << ";" << phase[1].is_centered() << ";" << phase[2].is_centered() << ";" << phase[3].is_centered() << ";";
 
-        file << leg[0].get_foot_BRF()[0] << ";" << leg[0].get_foot_BRF()[1] << ";" << leg[0].get_foot_BRF()[2] << endl;
+        file << leg[0].get_foot_BRF()[0] << ";" << leg[0].get_foot_BRF()[1] << ";" << leg[0].get_foot_BRF()[2] << ";";
+
+        file << servo_position[0] << ";" << servo_position[1] << ";" << servo_position[2] << endl;
+
     }
 
     milliseconds t1_ms = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
     duration<float> difference = t1_ms - t0_ms;
     int const milliseconds = difference.count() * 1000;
-    std::cout << "delay:" << milliseconds << "ms (erros count:" << errors << ")" << std::endl;
+    std::cout << "delay:" << milliseconds << "ms (error count:" << errors << ")" << std::endl;
     std::cout << "frequency:" << (counter*1000.0/milliseconds) << " Hz" << std::endl;
 
     /*
