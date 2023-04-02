@@ -1,9 +1,12 @@
-Arch :
+TODO :
 ------
-
-LL API : ESP32 comm
-ML API : Joint / Kinematic / todo : J, GRF, Fusion Filter
-HL API : Pose (height, pitch, roll, yaw) & Gait (vx,vy,w) & States (REST, STANDBY..) + Odom
+- MP2 servo calibration with tool
+- ROS2 WS with JOY, TELEOP, CONTROLLER (Gait, Ik, ESP32)
+- Walk!
+- IMU + driver with auto cal gZ
+- IMU closed-loop gait
+- ODOM from gait
+- Robot Localization
 
 Tests :
 -------
