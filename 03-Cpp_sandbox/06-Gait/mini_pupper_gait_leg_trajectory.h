@@ -52,11 +52,26 @@ namespace mini_pupper
                 }
                 else // PHASE_SWING
                 {
+                    // Linear swing over curved stance
 
-                    // TODO LINEAR
-                    // TODO LINEAR
-                    // TODO LINEAR
-                    _foot_BRF = _foot_origin_BRF;
+                    // LO point
+                    Eigen::Vector3f const LO_delta {
+                        _coc.foot_distance*cosf(_coc.foot_angle-wz*_cfg.stance_s*(0.5f)),
+                        _coc.foot_distance*sinf(_coc.foot_angle-wz*_cfg.stance_s*(0.5f)),
+                        0.0f
+                    };
+                    Eigen::Vector3f const _LO_foot_BRF {_coc.position_BRF + LO_delta };
+                    // TD point
+                    Eigen::Vector3f const TD_delta {
+                        _coc.foot_distance*cosf(_coc.foot_angle-wz*_cfg.stance_s*(-0.5f)),
+                        _coc.foot_distance*sinf(_coc.foot_angle-wz*_cfg.stance_s*(-0.5f)),
+                        0.0f
+                    };
+                    Eigen::Vector3f const _TD_foot_BRF {_coc.position_BRF + TD_delta};
+                    // vector
+                    Eigen::Vector3f const _LO_to_TD_foot_BRF {_TD_foot_BRF-_LO_foot_BRF};
+                    // foot
+                    _foot_BRF = _LO_foot_BRF + _LO_to_TD_foot_BRF*_phase.get_alpha();
                 }
             }
             else // straight

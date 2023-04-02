@@ -82,6 +82,21 @@ int main()
             p.update(time_s,vel_smo.is_moving());
         for(auto & l : leg)
             l.update(vel_smo.get_vx(),vel_smo.get_vy(),vel_smo.get_wz());
+
+        // compute in-place transformation
+        Eigen::Matrix<float,3,4> feet_BRF;
+        Eigen::Vector3f const translation {dx,dy,dz};
+        Eigen::Matrix3d const rotation { rotation_from_euler(roll,pitch,yaw) };
+        for(size_t leg_id=0; leg_id<4; ++leg_id)
+        {
+            Eigen::Vector3f foot_BRF = leg[leg_id].get_foot_BRF();
+            foot_BRF += translation;
+            foot_BRF *= rotation;
+
+        }
+
+
+
         // TO APPLY translation x,y,z and rotations P/R/Y in one pass on the final foot positins
         // TO APPLY translation x,y,z and rotations P/R/Y in one pass on the final foot positins
         // TO APPLY translation x,y,z and rotations P/R/Y in one pass on the final foot positins
