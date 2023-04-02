@@ -24,9 +24,9 @@ namespace mini_pupper
         {};
 
         void update(
-            float vx,    float vy,   float wz,
-            float dx,    float dy,   float dz,
-            float pitch, float roll, float yaw
+            float vx,
+            float vy,
+            float wz
         )
         {
             // 1. capture speed when leg centered

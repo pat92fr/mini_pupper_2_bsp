@@ -77,18 +77,14 @@ int main()
         float yaw {0.0f};
 
         // gait computation
-
         vel_smo.update(vx,vy,wz);
-
-
         for(auto & p : phase)
             p.update(time_s,vel_smo.is_moving());
         for(auto & l : leg)
-            l.update(
-                vel_smo.get_vx(),vel_smo.get_vy(),vel_smo.get_wz(),
-                 dx,dy,dz,
-                 pitch,roll,yaw
-            );
+            l.update(vel_smo.get_vx(),vel_smo.get_vy(),vel_smo.get_wz());
+        // TO APPLY translation x,y,z and rotations P/R/Y in one pass on the final foot positins
+        // TO APPLY translation x,y,z and rotations P/R/Y in one pass on the final foot positins
+        // TO APPLY translation x,y,z and rotations P/R/Y in one pass on the final foot positins
 
         file << time_s << ";" ;
         file << vx << ";" << vel_smo.get_vx() << ";";
