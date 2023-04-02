@@ -1,0 +1,28 @@
+sudo apt-get install bluez
+systemctl enable bluetooth
+systemctl start bluetooth
+systemctl status bluetooth
+bluetoothctl
+
+agent on
+default-agent
+power on
+discoverable on
+pairable on
+scan on
+
+After executing the preceding commands, press the “PS3” button (logo’ed button) on the controller and the console prompt you to authorize it. Simply type “yes” and hit enter, your controller should now be paired.
+
+ubuntu@mp2:~$ bluetoothctl
+Agent registered
+[CHG] Controller DC:A6:32:2E:2D:DB Pairable: yes
+[bluetooth]# connect A5:15:66:C1:AC:5C
+Attempting to connect to A5:15:66:C1:AC:5C
+Failed to connect: org.bluez.Error.Failed br-connection-create-socket
+[CHG] Device A5:15:66:C1:AC:5C Connected: yes
+Authorize service
+[agent] Authorize service 00001124-0000-1000-8000-00805f9b34fb (yes/no): yes
+[Wireless Controller]#
+
+ubuntu@mp2:~$ ls /dev/input
+event0  event1  event2  js0  mice  mouse0
