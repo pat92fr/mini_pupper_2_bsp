@@ -5,6 +5,9 @@
 #include <algorithm>
 using namespace std;
 
+#include <chrono>
+using namespace std::chrono;
+
 #include "mini_pupper.h"
 using namespace mini_pupper;
 
@@ -32,7 +35,22 @@ int main()
     };
     joints j;
 
+    /*
+    mini_pupper::esp32_api servo;
+    mini_pupper::parameters_control_instruction_format control;
+    mini_pupper::parameters_control_acknowledge_format feedback;
+    */
 
+    /*
+    // free joints
+    for(size_t index=0; index<12; ++index)
+    {
+        control.goal_position[index]= 512;
+        control.torque_enable[index] = 0;
+    }
+    int result = servo.update(control,feedback);
+    std::cout << "result:" << result << std::endl;
+    */
 
     // simulate timer-task
     ofstream file("gai.csv");
@@ -44,8 +62,13 @@ int main()
     file << "phase[0].get_state()" << ";" << "phase[1].get_state()" << ";" << "phase[2].get_state()" << ";" << "phase[3].get_state()" << ";";
     file << "phase[0].is_centered()" << ";" << "phase[1].is_centered()" << ";" << "phase[2].is_centered()" << ";" << "phase[3].is_centered()" << endl;
 
+    milliseconds t0_ms = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
+    size_t counter {0};
+    int errors {0};
+
     for(float time_s=0.0f; time_s<6.0f; time_s+=cfg.dt)
     {
+        ++counter;
 
         // speed profile for simulation
         float vx {0.0f};
@@ -96,6 +119,17 @@ int main()
         int servo_position[12] {0};
         j.position_setpoint(joint_position,servo_position);
 
+        // ESP32
+        /*
+        for(size_t index=0; index<12; ++index)
+        {
+            control.goal_position[index]= position_setpoint[index];
+            control.torque_enable[index] = 1;
+        }
+        int result = servo.update(control,feedback);
+        if(result!=mini_pupper::API_OK) ++errors;
+        */
+
         file << time_s << ";" ;
         file << vx << ";" << vel_smo.get_vx() << ";";
         file << vy << ";" << vel_smo.get_vy() << ";";
@@ -106,5 +140,23 @@ int main()
 
         file << leg[0].get_foot_BRF()[0] << ";" << leg[0].get_foot_BRF()[1] << ";" << leg[0].get_foot_BRF()[2] << endl;
     }
+
+    milliseconds t1_ms = duration_cast< milliseconds >(system_clock::now().time_since_epoch());
+    duration<float> difference = t1_ms - t0_ms;
+    int const milliseconds = difference.count() * 1000;
+    std::cout << "delay:" << milliseconds << "ms (erros count:" << errors << ")" << std::endl;
+    std::cout << "frequency:" << (counter*1000.0/milliseconds) << " Hz" << std::endl;
+
+    /*
+    // free joints
+    for(size_t index=0; index<12; ++index)
+    {
+        control.goal_position[index]= 512;
+        control.torque_enable[index] = 0;
+    }
+    int result = servo.update(control,feedback);
+    std::cout << "result:" << result << std::endl;
+    */
+
     return 0;
 }
