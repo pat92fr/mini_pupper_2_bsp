@@ -37,6 +37,7 @@
 		<Unit filename="mini_pupper.h" />
 		<Unit filename="mini_pupper_config.h" />
 		<Unit filename="mini_pupper_gait_center_of_curvature.h" />
+		<Unit filename="mini_pupper_gait_leg_trajectory.h" />
 		<Unit filename="mini_pupper_gait_phase.h" />
 		<Unit filename="mini_pupper_gait_velocity_smoother.h" />
 		<Unit filename="mini_pupper_kinematics.h" />

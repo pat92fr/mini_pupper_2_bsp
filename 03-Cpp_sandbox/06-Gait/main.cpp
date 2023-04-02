@@ -18,13 +18,20 @@ int main()
 
     config cfg;
     velocity_smoother vel_smo(cfg);
+    center_of_curvature coc(cfg);
     vector<gait_phase> phase {
         { cfg, LEG_FR },
         { cfg, LEG_FL },
         { cfg, LEG_RR },
         { cfg, LEG_RL }
     };
-    center_of_curvature coc(cfg);
+    vector<leg_trajectory> leg {
+        { cfg, LEG_FR, phase[LEG_FR] },
+        { cfg, LEG_FL, phase[LEG_FL] },
+        { cfg, LEG_RR, phase[LEG_RR] },
+        { cfg, LEG_RL, phase[LEG_RL] }
+    };
+
     kinematic kin;
 
     // simulate timer-task
@@ -40,7 +47,7 @@ int main()
     for(float time_s=0.0f; time_s<6.0f; time_s+=cfg.dt)
     {
 
-        // speed profil for simulation
+        // speed profile for simulation
         float vx {0.0f};
         float vy {0.0f};
         float wz {0.0f};
@@ -62,14 +69,27 @@ int main()
         if(time_s > 4.0f)
             wz = 0.0f;
 
+        float dx {0.0f};
+        float dy {0.0f};
+        float dz {0.0f};
+
+        float pitch {0.0f};
+        float roll {0.0f};
+        float yaw {0.0f};
+
         // gait computation
 
         vel_smo.update(vx,vy,wz);
-
         coc.update(vel_smo.get_vx(),vel_smo.get_vy(),vel_smo.get_wz());
 
         for(auto & p : phase)
             p.update(time_s,vel_smo.is_moving());
+        for(auto & l : leg)
+            l.update(
+                vel_smo.get_vx(),vel_smo.get_vy(),vel_smo.get_wz(),
+                 dx,dy,dz,
+                 pitch,roll,yaw
+            );
 
         file << time_s << ";" ;
         file << vx << ";" << vel_smo.get_vx() << ";";
