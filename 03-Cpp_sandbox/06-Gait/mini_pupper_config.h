@@ -23,6 +23,7 @@ namespace mini_pupper
         float period_s {0.500f};
         float stance_s {0.240f};
         float stance_offset[4] { 0.0f, 0.5f, 0.0f, 0.5f };
+        float swing_height {0.010f};
 
 
     };

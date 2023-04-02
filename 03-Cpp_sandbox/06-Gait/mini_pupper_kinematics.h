@@ -77,7 +77,7 @@ namespace mini_pupper
 
         Eigen::Matrix<float,3,4> four_leg_inverse_kinematics_BRF(Eigen::Matrix<float,3,4> const & foot_position_BRF) const
         {
-            Eigen::Matrix<float,3,4> const m { (foot_position_BRF-LEG_ORIGIN) };
+            Eigen::Matrix<float,3,4> const m { (foot_position_BRF-LEG_ORIGIN_BRF) };
             Eigen::Matrix<float,3,4> foot_position_LRF;
             foot_position_LRF.col(LEG_FR) = ROTATION_BRF_TO_LRF*m.col(LEG_FR);
             foot_position_LRF.col(LEG_FL) = ROTATION_BRF_TO_LRF*m.col(LEG_FL);
@@ -106,13 +106,19 @@ namespace mini_pupper
         float CROUCH_Z {-0.030f};
         float CROUCH_X_SHIFT {0.000f};
 
-        Eigen::Matrix<float,3,4> standby_pose_BRF {
+        Eigen::Matrix<float,3,4> LEG_ORIGIN_BRF {
+            { LEG_OX,     LEG_OX,      -LEG_OX,     -LEG_OX },
+            {-LEG_OY,     LEG_OY,      -LEG_OY,      LEG_OY },
+            { LEG_OZ,     LEG_OZ,       LEG_OZ,      LEG_OZ }
+        };
+
+        Eigen::Matrix<float,3,4> STANDBY_POSE_BRF {
             {  STANCE_X+STANCE_X_SHIFT, STANCE_X+STANCE_X_SHIFT,-STANCE_X+STANCE_X_SHIFT,  -STANCE_X+STANCE_X_SHIFT },
             { -STANCE_Y,                STANCE_Y,               -STANCE_Y,                  STANCE_Y },
             {  STANCE_Z,                STANCE_Z,                STANCE_Z,                  STANCE_Z }
         };
 
-        Eigen::Matrix<float,3,4> crouch_pose_BRF {
+        Eigen::Matrix<float,3,4> CROUCH_POSE_BRF {
             {  CROUCH_X+CROUCH_X_SHIFT, CROUCH_X+CROUCH_X_SHIFT,-CROUCH_X+CROUCH_X_SHIFT,  -CROUCH_X+CROUCH_X_SHIFT },
             { -CROUCH_Y,                CROUCH_Y,               -CROUCH_Y,                  CROUCH_Y },
             {  CROUCH_Z,                CROUCH_Z,                CROUCH_Z,                  CROUCH_Z }
@@ -131,12 +137,6 @@ namespace mini_pupper
             { 0, 0, 1 },
             { 0, 1, 0 },
             {-1, 0, 0 }
-        };
-
-        Eigen::Matrix<float,3,4> LEG_ORIGIN {
-            { LEG_OX,     LEG_OX,      -LEG_OX,     -LEG_OX },
-            {-LEG_OY,     LEG_OY,      -LEG_OY,      LEG_OY },
-            { LEG_OZ,     LEG_OZ,       LEG_OZ,      LEG_OZ }
         };
 
         inline float cos_law_c(float a, float b, float angle) const

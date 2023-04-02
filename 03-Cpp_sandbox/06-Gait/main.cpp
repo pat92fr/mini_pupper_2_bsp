@@ -8,9 +8,8 @@ using namespace std;
 #include "mini_pupper.h"
 using namespace mini_pupper;
 
-// TODO : one leg trajectory generator : configuration, filtered velocity, CoC computation (curve), phase
-// TODO : config(height) + (state, alpha, vx, vy, wz filtered) ==> dX,dY,dZ around STANCE POSE
-// CoM dynamic control
+
+// Height & CoM dynamic control
 
 int main()
 {
@@ -24,14 +23,15 @@ int main()
         { cfg, LEG_RR },
         { cfg, LEG_RL }
     };
+    kinematic kin;
     vector<leg_trajectory> leg {
-        { cfg, LEG_FR, phase[LEG_FR] },
-        { cfg, LEG_FL, phase[LEG_FL] },
-        { cfg, LEG_RR, phase[LEG_RR] },
-        { cfg, LEG_RL, phase[LEG_RL] }
+        { cfg, LEG_FR, phase[LEG_FR], kin },
+        { cfg, LEG_FL, phase[LEG_FL], kin },
+        { cfg, LEG_RR, phase[LEG_RR], kin },
+        { cfg, LEG_RL, phase[LEG_RL], kin }
     };
 
-    kinematic kin;
+
 
     // simulate timer-task
     ofstream file("gai.csv");
@@ -59,12 +59,12 @@ int main()
             vx = 0.0f;
 
         if(time_s > 1.0f)
-            vy = 0.10f;
+            vy = 0.0f;
         if(time_s > 3.5f)
             vy = 0.0f;
 
         if(time_s > 3.0f)
-            wz = 2.00f;
+            wz = 1.0f;
         if(time_s > 4.0f)
             wz = 0.0f;
 
@@ -96,7 +96,9 @@ int main()
         file << wz << ";" << vel_smo.get_wz() << ";";
         //file << coc.distance << ";" << coc.angle << ";" << coc.position_BRF[0] << ";" << coc.position_BRF[1] << ";";
         file << phase[0].get_state() << ";" << phase[1].get_state() << ";" << phase[2].get_state() << ";" << phase[3].get_state() << ";";
-        file << phase[0].is_centered() << ";" << phase[1].is_centered() << ";" << phase[2].is_centered() << ";" << phase[3].is_centered() << endl;
+        file << phase[0].is_centered() << ";" << phase[1].is_centered() << ";" << phase[2].is_centered() << ";" << phase[3].is_centered() << ";";
+
+        file << leg[0].get_foot_BRF()[0] << ";" << leg[0].get_foot_BRF()[1] << ";" << leg[0].get_foot_BRF()[2] << endl;
     }
     return 0;
 }
