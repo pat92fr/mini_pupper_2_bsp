@@ -30,6 +30,7 @@ int main()
         { cfg, LEG_RR, phase[LEG_RR], kin },
         { cfg, LEG_RL, phase[LEG_RL], kin }
     };
+    joints j;
 
 
 
@@ -85,21 +86,15 @@ int main()
 
         // compute in-place transformation
         Eigen::Matrix<float,3,4> feet_BRF;
-        Eigen::Vector3f const translation {dx,dy,dz};
-        Eigen::Matrix3d const rotation { rotation_from_euler(roll,pitch,yaw) };
+        Eigen::Vector3f const translation { dx, dy, dz };
+        Eigen::Matrix3f const rotation { rotation_from_euler(roll,pitch,yaw) };
         for(size_t leg_id=0; leg_id<4; ++leg_id)
-        {
-            Eigen::Vector3f foot_BRF = leg[leg_id].get_foot_BRF();
-            foot_BRF += translation;
-            foot_BRF *= rotation;
+            feet_BRF.col(leg_id) = rotation * ( leg[leg_id].get_foot_BRF() + translation );
 
-        }
-
-
-
-        // TO APPLY translation x,y,z and rotations P/R/Y in one pass on the final foot positins
-        // TO APPLY translation x,y,z and rotations P/R/Y in one pass on the final foot positins
-        // TO APPLY translation x,y,z and rotations P/R/Y in one pass on the final foot positins
+        // compute IK, joint and servo position
+        Eigen::Matrix<float,3,4> joint_position { kin.four_leg_inverse_kinematics_BRF(feet_BRF) };
+        int servo_position[12] {0};
+        j.position_setpoint(joint_position,servo_position);
 
         file << time_s << ";" ;
         file << vx << ";" << vel_smo.get_vx() << ";";

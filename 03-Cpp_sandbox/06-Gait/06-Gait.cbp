@@ -40,6 +40,7 @@
 		<Unit filename="mini_pupper_gait_leg_trajectory.h" />
 		<Unit filename="mini_pupper_gait_phase.h" />
 		<Unit filename="mini_pupper_gait_velocity_smoother.h" />
+		<Unit filename="mini_pupper_joints.h" />
 		<Unit filename="mini_pupper_kinematics.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
