@@ -26,3 +26,7 @@ Authorize service
 
 ubuntu@mp2:~$ ls /dev/input
 event0  event1  event2  js0  mice  mouse0
+
+[Wireless Controller]# trust A5:15:66:C1:AC:5C
+[CHG] Device A5:15:66:C1:AC:5C Trusted: yes
+Changing A5:15:66:C1:AC:5C trust succeeded
