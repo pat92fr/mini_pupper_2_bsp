@@ -1,0 +1,11 @@
+mini_pupper> 
+mini_pupper> calibrate-clear
+The calibration file is deleted successfully.mini_pupper> 
+mini_pupper> calibrate-begin
+mini_pupper> 
+mini_pupper> .[0;32mI (31842) MAIN: Servos are set to neutral position, you can now assemble the robot.[0m
+.[0;32mI (31843) MAIN: STATE_CALIBRATION..[0m
+calibrate-end
+mini_pupper> 
+.[0;32mI (211986) MAIN: Computed Offsets : 27 19 -1 -25 2 -20 24 24 32 7 19 3.[0m
+mini_pupper> .[0;32mI (212398) MAIN: Calibration saved..[0m
