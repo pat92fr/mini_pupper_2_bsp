@@ -29,7 +29,7 @@ namespace mini_pupper
             if(vy>_vy_filtered)
                 _vy_filtered = min( _cfg.vy_max_mps, min( vy, _vy_filtered+_cfg.dt*_cfg.axy_mps ) );
             if(vy<_vy_filtered)
-                _vy_filtered = max( -_cfg.vx_max_mps, max( vy, _vy_filtered-_cfg.dt*_cfg.axy_mps ) );
+                _vy_filtered = max( -_cfg.vy_max_mps, max( vy, _vy_filtered-_cfg.dt*_cfg.axy_mps ) );
             if(wz>_wz_filtered)
                 _wz_filtered = min( _cfg.wz_max_rps, min( wz, _wz_filtered+_cfg.dt*_cfg.az_rps ) );
             if(wz<_wz_filtered)
@@ -43,7 +43,7 @@ namespace mini_pupper
 
         bool is_moving() const
         {
-            return _vx_filtered>_cfg.vx_min_mps || _vy_filtered>_cfg.vy_min_mps || _wz_filtered>_cfg.wz_min_rps;
+            return fabs(_vx_filtered) >_cfg.vx_min_mps || fabs(_vy_filtered)>_cfg.vy_min_mps || fabs(_wz_filtered)>_cfg.wz_min_rps;
         }
 
     private:

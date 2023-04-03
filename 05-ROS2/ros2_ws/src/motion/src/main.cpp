@@ -221,8 +221,8 @@ public:
         for(auto & l : leg)
             l.update(vel_smo.get_vx(),vel_smo.get_vy(),vel_smo.get_wz());
 
-		RCLCPP_INFO(this->get_logger(), "Moving: %d, Vx: %f - Vy: %f - Wz: %f", vel_smo.is_moving(), vel_smo.get_vx(), vel_smo.get_vy(), vel_smo.get_wz());
-		RCLCPP_INFO(this->get_logger(), "State: %d - Alpha: %f", phase[0].get_state(), phase[0].get_alpha());
+		//RCLCPP_INFO(this->get_logger(), "Moving: %d, Vx: %f - Vy: %f - Wz: %f", vel_smo.is_moving(), vel_smo.get_vx(), vel_smo.get_vy(), vel_smo.get_wz());
+		//RCLCPP_INFO(this->get_logger(), "State: %d - Alpha: %f", phase[0].get_state(), phase[0].get_alpha());
 
         // compute in-place transformation
         Eigen::Matrix<float,3,4> feet_BRF;
@@ -246,7 +246,7 @@ public:
         if(result!=mini_pupper::API_OK)
 			RCLCPP_ERROR(this->get_logger(), "Failed to communication with ESP32!");
 
-		RCLCPP_INFO(this->get_logger(), "Servo: %d %d %d", servo_position[0],servo_position[1],servo_position[2]);
+		//RCLCPP_INFO(this->get_logger(), "Servo: %d %d %d", servo_position[0],servo_position[1],servo_position[2]);
 
 	}
 
