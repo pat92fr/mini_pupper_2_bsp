@@ -14,10 +14,16 @@ teleop_twist_joy_node:
       z: 0.03
 
     axis_angular:
+      pitch: 6
+      roll: 5
       yaw: 3
     scale_angular:
+      pitch: 0.5
+      roll: 0.5
       yaw: 1.0
     scale_angular_turbo:
+      pitch: 0.5
+      roll: 0.5
       yaw: 2.0
 
     require_enable_button: true

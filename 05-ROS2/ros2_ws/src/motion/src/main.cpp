@@ -202,17 +202,11 @@ public:
 			RCLCPP_ERROR(this->get_logger(), "Failed to get system time");
 		}
 		float time_s = (float)((now-start_time)/1000)/1000000.0f;	
-		RCLCPP_INFO(this->get_logger(), "time: %f", time_s);
+		//RCLCPP_INFO(this->get_logger(), "time: %f", time_s);
 
 		//RCLCPP_INFO(this->get_logger(), "Vx: %f - Vy: %f - Wz: %f", _setpoint_vx, _setpoint_vy, _setpoint_wz);
 
-        float dx {0.0f};
-        float dy {0.0f};
-        float dz {0.0f};
 
-        float pitch {0.0f};
-        float roll {0.0f};
-        float yaw {0.0f};
 
         // gait computation
         vel_smo.update(_setpoint_vx,_setpoint_vy,_setpoint_wz);
@@ -226,8 +220,8 @@ public:
 
         // compute in-place transformation
         Eigen::Matrix<float,3,4> feet_BRF;
-        Eigen::Vector3f const translation { dx, dy, dz };
-        Eigen::Matrix3f const rotation { rotation_from_euler(roll,pitch,yaw) };
+        Eigen::Vector3f const translation { _dx, _dy, _dz };
+        Eigen::Matrix3f const rotation { rotation_from_euler(_roll,_pitch,_yaw) };
         for(size_t leg_id=0; leg_id<4; ++leg_id)
             feet_BRF.col(leg_id) = rotation * ( leg[leg_id].get_foot_BRF() + translation );
 
@@ -261,6 +255,9 @@ private:
 		//RCLCPP_INFO(this->get_logger(),"CMD_VEL %.3f %.3f",msg->linear.x,msg->angular.z);
 		_setpoint_vx = msg->linear.x;
 		_setpoint_vy = msg->linear.y;
+		_dz = msg->linear.z;
+		_pitch = 0.0f; //msg->angular.x;
+		_roll = 0.0f; //msg->angular.y;
 		_setpoint_wz = msg->angular.z;
 		// get time
 		rcutils_time_point_value_t now;
@@ -274,9 +271,16 @@ private:
 	rcutils_time_point_value_t start_time;
 
 	// setpoints
-	float _setpoint_vx = 0.0f;
-	float _setpoint_vy = 0.0f;
-	float _setpoint_wz = 0.0f;
+	float _setpoint_vx {0.0f};
+	float _setpoint_vy {0.0f};
+	float _setpoint_wz {0.0f};
+	float _dz {0.0f};
+	float _dx {0.0f};
+	float _dy {0.0f};
+
+	float _pitch {0.0f};
+	float _roll {0.0f};
+	float _yaw {0.0f};	
 	int32_t _setpoint_timestamp_s = 0;
 
 	// motion
