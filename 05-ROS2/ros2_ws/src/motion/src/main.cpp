@@ -1,11 +1,10 @@
 #include "rclcpp/rclcpp.hpp"
 #include "rcl_interfaces/msg/set_parameters_result.hpp"
 #include <geometry_msgs/msg/twist.hpp>
+#include <sensor_msgs/msg/joy.hpp>
 #include "nav_msgs/msg/odometry.hpp"
 #include "tf2/LinearMath/Quaternion.h"
 #include "tf2_ros/transform_broadcaster.h"
-
-//#include <unistd.h>
 
 #include <iostream>
 #include <fstream>
@@ -22,6 +21,13 @@ using namespace std::chrono;
 #include "mini_pupper.h"
 using namespace mini_pupper;
 
+enum e_mode
+{
+	MODE_IDLE = 0,			// force idle
+	MODE_ATTITUDE_CONTROL, 	// override manual joy control
+	MODE_VELOCITY_CONTROL, 	// override manual joy control
+	MODE_AUTO_CONTROL 		// cmd_vel control from nav2
+};
 
 class motion_node : public rclcpp::Node
 {
@@ -94,6 +100,12 @@ public:
 			"/cmd_vel",
 			10,
 			std::bind(&motion_node::_cmd_vel_callback, this, std::placeholders::_1)
+		);	
+
+		_joy_sub = create_subscription<sensor_msgs::msg::Joy>(
+			"/joy",
+			10,
+			std::bind(&motion_node::_joy_callback, this, std::placeholders::_1)
 		);	
 /*
 		// odometry publisher
@@ -240,26 +252,40 @@ public:
         if(result!=mini_pupper::API_OK)
 			RCLCPP_ERROR(this->get_logger(), "Failed to communication with ESP32!");
 
+		// autocal
+		static float gz_filtered = 0.0f;
+		gz_filtered = 0.995f * gz_filtered + 0.005f * feedback.gz;
+		static float gz_filtered_variance = 0.0f;
+		gz_filtered_variance = 0.995f * gz_filtered_variance + 0.005f * powf(gz_filtered-feedback.gz,2.0f);
+		static float gz_drift = 0.0f;
+		if(gz_filtered_variance<0.1)
+			gz_drift = 0.99f * gz_drift + 0.01f * gz_filtered;
+		static unsigned int count = 0;
+		//if((count++)%100==0)
+		//	RCLCPP_INFO(this->get_logger(), "Gz: %f (mean:%f) [variance:%f] {drift=%f}", feedback.gz, gz_filtered, gz_filtered_variance,gz_drift);
+
+		// check heading with drift compensation !
+
 		//RCLCPP_INFO(this->get_logger(), "Servo: %d %d %d", servo_position[0],servo_position[1],servo_position[2]);
 
 	}
 
 private:
 	rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr _cmd_vel_sub;
+	rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr _joy_sub;
 	rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr _odom_pub;
 	OnSetParametersCallbackHandle::SharedPtr _param_cb_ptr;
 	rclcpp::TimerBase::SharedPtr _timer;
 
-	void _cmd_vel_callback(const std::shared_ptr<geometry_msgs::msg::Twist> msg) //, const std::string & key)
+	void _cmd_vel_callback(const std::shared_ptr<geometry_msgs::msg::Twist> msg)
 	{
 		//RCLCPP_INFO(this->get_logger(),"CMD_VEL %.3f %.3f",msg->linear.x,msg->angular.z);
-		_setpoint_vx = msg->linear.x;
-		_setpoint_vy = msg->linear.y;
-		_dz = msg->linear.z;
-		_pitch = msg->angular.y; 
-		_roll = 0.0f;
-		_yaw = msg->angular.x;
-		_setpoint_wz = msg->angular.z;
+		if(mode==MODE_AUTO_CONTROL)
+		{
+			_setpoint_vx = msg->linear.x;
+			_setpoint_vy = msg->linear.y;
+			_setpoint_wz = msg->angular.z;
+		}
 		// get time
 		rcutils_time_point_value_t now;
 		if (rcutils_system_time_now(&now) != RCUTILS_RET_OK)
@@ -269,16 +295,111 @@ private:
 		_setpoint_timestamp_s = RCL_NS_TO_S(now);
 	}
 
+	void _joy_callback(const std::shared_ptr<sensor_msgs::msg::Joy> msg)
+	{
+		// Mode Triangle (walking)
+		// Mode Round (attitude)
+		// Mode Cross (walking+dz)
+		// Mode Square (walking from nav2)
+		if(msg->buttons[0]==1)
+		{
+			mode = MODE_IDLE;
+			RCLCPP_INFO(this->get_logger(),"MODE_IDLE");
+		}
+		else if(msg->buttons[1]==1)
+		{
+			mode = MODE_ATTITUDE_CONTROL;
+			RCLCPP_INFO(this->get_logger(),"MODE_ATTITUDE_CONTROL");
+		}
+		else if(msg->buttons[2]==1)
+		{
+			mode = MODE_VELOCITY_CONTROL;
+			RCLCPP_INFO(this->get_logger(),"MODE_VELOCITY_CONTROL");
+		}
+		else if(msg->buttons[3]==1)
+		{
+			mode = MODE_AUTO_CONTROL;
+			RCLCPP_INFO(this->get_logger(),"MODE_AUTO_CONTROL");
+		}
+
+		switch(mode)
+		{
+		case MODE_IDLE:
+			{
+				_dx = 0.0f;
+				_dy = 0.0f;
+				_dz = 0.0f;
+				_pitch = 0.0f;
+				_roll = 0.0f;
+				_yaw = 0.0f;
+				_setpoint_vx = 0.0f;
+				_setpoint_vy = 0.0f;
+				_setpoint_wz = 0.0f;
+			}
+			break;
+		case MODE_ATTITUDE_CONTROL:
+			{
+				_dx = msg->axes[7]*0.01f;
+				_dy = msg->axes[6]*0.01f;
+				_dz = msg->axes[1]*-0.025f;
+				_pitch = -msg->axes[4]*0.3f;
+				_roll = msg->axes[0]*0.3f;
+				_yaw = -msg->axes[3]*0.6f;
+				_setpoint_vx = 0.0f;
+				_setpoint_vy = 0.0f;
+				_setpoint_wz = 0.0f;
+			}
+			break;
+		case MODE_VELOCITY_CONTROL:
+			{
+				_dx = 0.0f;
+				_dy = 0.0f;
+				_dz = msg->axes[4]*-0.025f;
+				_pitch = 0.0f;
+				_roll = 0.0f;
+				_yaw = 0.0f;
+				_setpoint_vx = msg->axes[1]*cfg.vx_max_mps;
+				_setpoint_vy = msg->axes[0]*cfg.vy_max_mps;
+				_setpoint_wz = msg->axes[3]*cfg.wz_max_rps;
+			}
+			break;
+		case MODE_AUTO_CONTROL:
+			{
+				_dx = 0.0f;
+				_dy = 0.0f;
+				_dz = 0.0f;
+				_pitch = 0.0f;
+				_roll = 0.0f;
+				_yaw = 0.0f;
+				// velocity from /cmd_vel
+			}
+			break;
+		default:
+			{
+				_dx = 0.0f;
+				_dy = 0.0f;
+				_dz = 0.0f;
+				_pitch = 0.0f;
+				_roll = 0.0f;
+				_yaw = 0.0f;
+				_setpoint_vx = 0.0f;
+				_setpoint_vy = 0.0f;
+				_setpoint_wz = 0.0f;
+			}
+			break;
+		}
+	}
+
 	rcutils_time_point_value_t start_time;
 
-	// setpoints
+	// controls
+	e_mode mode {MODE_IDLE};
 	float _setpoint_vx {0.0f};
 	float _setpoint_vy {0.0f};
 	float _setpoint_wz {0.0f};
 	float _dz {0.0f};
 	float _dx {0.0f};
 	float _dy {0.0f};
-
 	float _pitch {0.0f};
 	float _roll {0.0f};
 	float _yaw {0.0f};	
