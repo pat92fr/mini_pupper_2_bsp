@@ -256,8 +256,9 @@ private:
 		_setpoint_vx = msg->linear.x;
 		_setpoint_vy = msg->linear.y;
 		_dz = msg->linear.z;
-		_pitch = 0.0f; //msg->angular.x;
-		_roll = 0.0f; //msg->angular.y;
+		_pitch = msg->angular.y; 
+		_roll = 0.0f;
+		_yaw = msg->angular.x;
 		_setpoint_wz = msg->angular.z;
 		// get time
 		rcutils_time_point_value_t now;
