@@ -33,8 +33,12 @@ namespace mini_pupper
         uint16_t present_position[12];
         int16_t present_load[12];
         // IMU data
-        float ax, ay, az;
-        float gx, gy, gz;
+        float ax;
+        float ay;
+        float az;
+        float gx;
+        float gy;
+        float gz;
         // POWER SUPPLY data
         float voltage_V;
         float current_A;

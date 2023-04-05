@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(motion)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+  add_compile_options(-Wall -Wextra -Wpedantic -std=c++20)
 endif()
 
 # find dependencies
@@ -30,7 +30,7 @@ endif()
 include_directories(include)
 include_directories(include/eigen)
 
-add_executable(motion src/main.cpp src/esp32-api.cpp)
+add_executable(motion src/main.cpp src/esp32-api.cpp src/FusionCompass.c src/FusionAhrs.c src/FusionOffset.c )
 ament_target_dependencies(motion rclcpp geometry_msgs std_msgs nav_msgs sensor_msgs tf2 tf2_ros) 
 
 install(TARGETS

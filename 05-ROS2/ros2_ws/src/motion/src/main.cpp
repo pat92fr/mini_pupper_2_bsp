@@ -21,6 +21,9 @@ using namespace std::chrono;
 #include "mini_pupper.h"
 using namespace mini_pupper;
 
+#include "Fusion.h"
+#define SAMPLE_PERIOD (0.003f) // replace this with actual sample period
+
 enum e_mode
 {
 	MODE_IDLE = 0,			// force idle
@@ -134,10 +137,15 @@ public:
 			RCLCPP_ERROR(this->get_logger(), "Failed to get system time");
 		}
 
+    
+    	FusionAhrsInitialise(&ahrs);
+
 		_timer = this->create_wall_timer(
 			std::chrono::microseconds((long int)(cfg.dt*1000000.0f)),
 			std::bind(&motion_node::update, this)
 		);
+
+
 	}
 
 	~motion_node()
@@ -261,6 +269,17 @@ public:
 		if(gz_filtered_variance<0.1)
 			gz_drift = 0.99f * gz_drift + 0.01f * gz_filtered;
 		static unsigned int count = 0;
+
+		RCLCPP_INFO(this->get_logger(), "ax %0.3f, ay %0.3f, az %0.3f", feedback.ax, feedback.ay, feedback.az);
+		//RCLCPP_INFO(this->get_logger(), "gx %0.1f, Pitch %0.1f, Yaw %0.1f", feedback.gx, feedback.gy, feedback.gz);
+
+        const FusionVector gyroscope = {feedback.gy, feedback.gx, -feedback.gz}; // replace this with actual gyroscope data in degrees/s
+        const FusionVector accelerometer = {feedback.ay, feedback.ax, -feedback.az}; // replace this with actual accelerometer data in g
+        FusionAhrsUpdateNoMagnetometer(&ahrs, gyroscope, accelerometer, SAMPLE_PERIOD);
+        const FusionEuler euler = FusionQuaternionToEuler(FusionAhrsGetQuaternion(&ahrs));
+		//        printf("Roll %0.1f, Pitch %0.1f, Yaw %0.1f\n", euler.angle.roll, euler.angle.pitch, euler.angle.yaw);
+		//RCLCPP_INFO(this->get_logger(), "Roll %0.1f, Pitch %0.1f, Yaw %0.1f", euler.angle.roll, euler.angle.pitch, euler.angle.yaw);
+
 		//if((count++)%100==0)
 		//	RCLCPP_INFO(this->get_logger(), "Gz: %f (mean:%f) [variance:%f] {drift=%f}", feedback.gz, gz_filtered, gz_filtered_variance,gz_drift);
 
@@ -425,6 +444,9 @@ private:
     esp32_api servo;
     parameters_control_instruction_format control;
     parameters_control_acknowledge_format feedback;
+
+	// IMU
+	FusionAhrs ahrs;
 
 };
 
