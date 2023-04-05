@@ -1,4 +1,4 @@
-/* Authors : 
+/* Authors :
  * - Hdumcke
  * - Pat92fr
  */
@@ -42,7 +42,7 @@ static const char *TAG = "IMU";
 
 /** registers */
 #define QMI8658C_WHO_AM_I_REG               0x00 // ID in QMI8658C default to 0x05
-#define QMI8658C_REVISION                   0x01 
+#define QMI8658C_REVISION                   0x01
 #define QMI8658C_ACC_GYRO_CTRL1_SPI_REG     0x02
 #define QMI8658C_ACC_GYRO_CTRL2_ACC_REG			0x03
 #define QMI8658C_ACC_GYRO_CTRL3_G_REG			  0x04
@@ -105,7 +105,7 @@ static const char *TAG = "IMU";
 IMU imu;
 
 IMU::IMU():
-_task_handle(NULL) 
+_task_handle(NULL)
 {
 #ifdef _IMU_BY_I2C_BUS
   // start i2c bus
@@ -139,13 +139,13 @@ _task_handle(NULL)
         .command_bits=0,
         .address_bits=8,
         .dummy_bits=0,
-        .mode=0,                                
+        .mode=0,
         .duty_cycle_pos=128,
         .cs_ena_pretrans=0,
         .cs_ena_posttrans=0,
         .clock_speed_hz=12*1000000, // 12MHz (15MHz max)
         .input_delay_ns = 0,
-        .spics_io_num=SPI_MASTER_CS,            
+        .spics_io_num=SPI_MASTER_CS,
         .flags = 0,
         .queue_size=2,
         .pre_cb = 0,
@@ -155,7 +155,7 @@ _task_handle(NULL)
     ESP_LOGI(TAG, "SPI device initialized successfully");
 
 #endif
-  // GPIO #39 configuration (IMU :: INT2)  
+  // GPIO #39 configuration (IMU :: INT2)
   gpio_config_t io_conf {};
   io_conf.intr_type = GPIO_INTR_DISABLE;
   io_conf.mode = GPIO_MODE_INPUT;
@@ -185,7 +185,7 @@ uint8_t IMU::init()
   {
     if(write_byte(config.reg,config.value)) return config.reg;
     //vTaskDelay(1 / portTICK_PERIOD_MS);
-    if(read_byte(config.reg, read_value)) return config.reg; 
+    if(read_byte(config.reg, read_value)) return config.reg;
     if(read_value!=config.value) return config.reg;
     //vTaskDelay(1 / portTICK_PERIOD_MS);
     ESP_LOGI(TAG, "configure register: %02xh - value: %02xh",(int)config.reg,(int)config.value);
@@ -200,7 +200,7 @@ uint8_t IMU::write_byte(uint8_t reg_addr, uint8_t data)
   return i2c_master_write_to_device(I2C_MASTER_NUM, I2C_DEV_ADDR, write_buf, sizeof(write_buf), I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS);
 #else
   spi_transaction_t t;
-  memset(&t, 0, sizeof(t)); 
+  memset(&t, 0, sizeof(t));
   t.flags = 0;
   t.user = nullptr;
   t.cmd = 0;
@@ -222,14 +222,14 @@ uint8_t IMU::read_byte(uint8_t reg_addr, uint8_t & data)
   return i2c_master_write_read_device(I2C_MASTER_NUM, I2C_DEV_ADDR, &reg_addr, 1, data, 1, I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS);
 #else
   spi_transaction_t t;
-  memset(&t, 0, sizeof(t)); 
+  memset(&t, 0, sizeof(t));
   t.flags = 0;
   t.user = nullptr;
-  t.cmd = 0;  
-  t.addr = reg_addr | SPI_READ; 
+  t.cmd = 0;
+  t.addr = reg_addr | SPI_READ;
   t.length=1*8;
   t.rxlength=1*8;
-  t.tx_buffer=nullptr;   
+  t.tx_buffer=nullptr;
   t.rx_buffer = &data;    // TODO : use RX DATA
   esp_err_t err = spi_device_transmit(_spi_device_handle, &t);
   ESP_LOGD(TAG, "read_byte : %d %d",(int)t.addr,(int)data);
@@ -243,15 +243,15 @@ uint8_t IMU::read_bytes(uint8_t reg_addr, uint8_t data[], uint8_t size)
   return i2c_master_write_read_device(I2C_MASTER_NUM, I2C_DEV_ADDR, &reg_addr, 1, data, size, I2C_MASTER_TIMEOUT_MS / portTICK_PERIOD_MS);
 #else
   spi_transaction_t t;
-  memset(&t, 0, sizeof(t)); 
+  memset(&t, 0, sizeof(t));
   t.flags = 0;
   t.user=nullptr;
   t.cmd = 0;
   t.addr = reg_addr | SPI_READ;
   t.length=size*8;
   t.rxlength=size*8;
-  t.tx_buffer=nullptr;   
-  t.rx_buffer=data;   
+  t.tx_buffer=nullptr;
+  t.rx_buffer=data;
   return spi_device_transmit(_spi_device_handle, &t);
 #endif
 }
@@ -276,7 +276,9 @@ uint8_t IMU::read_6dof()
     gy = 1.0f/16.0f* ((int16_t)(raw[9]<<8) | raw[8]);
     gz = 1.0f/16.0f* ((int16_t)(raw[11]<<8) | raw[10]);
     // log debug
-    ESP_LOGD(TAG, "ax:%0.3f ay:%0.3f az:%0.3f gx:%0.3f gy:%0.3f gz:%0.3f", ax, ay, az, gx, gy, gz );    
+    //ESP_LOGD(TAG, "ax:%0.3f ay:%0.3f az:%0.3f gx:%0.3f gy:%0.3f gz:%0.3f", ax, ay, az, gx, gy, gz );
+    //ESP_LOGI(TAG, "ax:%0.3f ay:%0.3f az:%0.3f gx:%0.3f gy:%0.3f gz:%0.3f", ax, ay, az, gx, gy, gz );
+    ESP_LOGI(TAG, "%x %x", raw[5], raw[4] );
     // stats
     f_monitor.update();
     return 0;
@@ -327,11 +329,11 @@ void IMU::start()
 
   // start the task
   _task_handle = xTaskCreateStaticPinnedToCore(
-      IMU_TASK,   
+      IMU_TASK,
       "IMU SERVICE",
-      stack_size,         
-      (void*)this,        
-      IMU_PRIORITY,     
+      stack_size,
+      (void*)this,
+      IMU_PRIORITY,
       stack,
       &task_buffer,
       IMU_CORE
@@ -367,5 +369,5 @@ void IMU_TASK(void * parameters)
 
     // stats
     imu->p_monitor.update();
-  }    
+  }
 }
