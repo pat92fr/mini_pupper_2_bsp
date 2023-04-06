@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1680809992 source:c:\guithub\minipupper\mini_pupper_2_bsp\06-pigpio\01-calibrationtool\main.cpp
+	<iostream>
+	<fstream>
+	<iostream>
+	<conio.h>
+	<cstdlib>
+
