@@ -48,5 +48,5 @@ int main(int argc, char *argv[])
         control.goal_position[channel]=1500;
     }    
     servo.update(control);
-    sleep(60); 
+    sleep(30); 
 }

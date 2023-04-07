@@ -8,7 +8,9 @@
 
 #include <iostream>
 #include <cmath>
+#include <chrono>
 using namespace std;
+using namespace std::chrono;
 
 #include <stdint.h>
 #include <unistd.h>
@@ -17,7 +19,7 @@ using namespace std;
 #include <pigpiod_if2.h>
 
 #include "Fusion.h"
-#define SAMPLE_PERIOD (0.003f) // replace this with actual sample period
+#define SAMPLE_PERIOD (0.003125f) // replace this with actual sample period
 
 namespace mini_pupper
 {
@@ -135,6 +137,8 @@ namespace mini_pupper
                     cout << "i2c_write_byte_data PWR_MGMT_1=00000000b (" << result << ")" << endl;
 
                     FusionAhrsInitialise(&_ahrs);
+                    t0_us = duration_cast< microseconds >(system_clock::now().time_since_epoch());
+                    t_last_us = t0_us;
 
                     result = callback_ex(_pi, 4, RISING_EDGE, servo_hat_callback_i2c, this);
                     cout << "i2c_write_byte_data PWR_MGMT_1=00000000b (" << result << ")" << endl;
@@ -204,11 +208,12 @@ namespace mini_pupper
             hat->_gy = 1.0f/16.4f * (float)gyro_temp[1];
             hat->_gz = 1.0f/16.4f * (float)gyro_temp[2];
 
-            
+            /*
             static size_t counter {0};
             if(counter++%333==0)
                 //cout << hat->_ax << " " << hat->_ay << " " << hat->_az << " " << hat->_gx << " " << hat->_gy << " " << hat->_gz << " " << endl;
                 cout << hat->_ax << " " << hat->_ay << " " << hat->_az << endl;
+            */
 
             // autocal
             static float gz_filtered = 0.0f;
@@ -225,6 +230,24 @@ namespace mini_pupper
             if(counter++%100==0)
                 cout << hat->_gz_calibrated << " (" << gz_drift << ") " << endl;
             */
+
+            // heading
+            microseconds t_now_us = duration_cast< microseconds >(system_clock::now().time_since_epoch());
+            duration<double> const dt0_us {t_now_us - hat->t0_us};
+            duration<double> const dt_us  {t_now_us - hat->t_last_us};
+            double const dt_s {dt_us.count()};
+            hat->t_last_us = t_now_us;
+            // compute heading after 4 seconds of calibration
+            if(dt0_us.count()>4.)
+            {
+                hat->_heading += (hat->_gz_calibrated*dt_s);
+            }
+
+            static size_t counter {0};
+            if(counter++%100==0)
+                cout << (dt0_us.count()) << " " << dt_s << " " << hat->_heading << endl;
+
+
 
             FusionVector const gyroscope = {hat->_gx, hat->_gy, hat->_gz}; // replace this with actual gyroscope data in degrees/s
             FusionVector const accelerometer = {hat->_ax, hat->_ay, hat->_az}; // replace this with actual accelerometer data in g
@@ -258,6 +281,10 @@ namespace mini_pupper
         float _gy {0.0f};
         float _gz {0.0f};
         float _gz_calibrated {0.0f};
+        
+        float _heading {0.0f};
+        microseconds t0_us;
+        microseconds t_last_us;
 
         // IMU
 	    FusionAhrs _ahrs;
