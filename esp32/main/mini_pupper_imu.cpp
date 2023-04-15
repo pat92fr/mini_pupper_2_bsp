@@ -278,7 +278,7 @@ uint8_t IMU::read_6dof()
     // log debug
     //ESP_LOGD(TAG, "ax:%0.3f ay:%0.3f az:%0.3f gx:%0.3f gy:%0.3f gz:%0.3f", ax, ay, az, gx, gy, gz );
     //ESP_LOGI(TAG, "ax:%0.3f ay:%0.3f az:%0.3f gx:%0.3f gy:%0.3f gz:%0.3f", ax, ay, az, gx, gy, gz );
-    ESP_LOGI(TAG, "%x %x", raw[5], raw[4] );
+    //ESP_LOGI(TAG, "%x %x", raw[5], raw[4] );
     // stats
     f_monitor.update();
     return 0;
